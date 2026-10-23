@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<meta name="description" content="NEDAL AI — مساعدك الذكي بالعربية والألمانية والإنجليزية">
+<title>NEDAL AI</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2d;--panel2:#18233b;--text:#f4f7ff;--muted:#a8b3cc;--line:#293652;--accent:#7c5cff;--accent2:#22d3ee}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#172448 0,#0b1020 55%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;min-height:100vh}
+.app{max-width:1000px;margin:auto;padding:18px;min-height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 20px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:white;font-weight:900;font-size:20px;box-shadow:0 8px 30px #7c5cff44}
+h1{font-size:20px;margin:0;letter-spacing:.3px}.tag{font-size:12px;color:var(--muted);margin-top:3px}
+select,button,textarea{font:inherit}select{background:var(--panel2);color:var(--text);border:1px solid var(--line);padding:10px 12px;border-radius:12px;max-width:145px}
+main{flex:1;display:flex;flex-direction:column;gap:18px;padding:24px 0}.hero{text-align:center;padding:18px 10px 8px}.orb{width:72px;height:72px;border-radius:24px;margin:0 auto 15px;background:linear-gradient(135deg,#7c5cff,#22d3ee);display:grid;place-items:center;font-size:30px;box-shadow:0 12px 45px #22d3ee22}
+.hero h2{font-size:clamp(25px,5vw,38px);margin:0 0 9px}.hero p{color:var(--muted);margin:0 auto;max-width:540px;line-height:1.8}
+.chips{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:20px}.chip{border:1px solid var(--line);background:#121a2dcc;color:var(--text);border-radius:14px;padding:11px 14px;cursor:pointer}.chip:hover{border-color:var(--accent)}
+.chat{display:flex;flex-direction:column;gap:12px;min-height:120px}.msg{max-width:88%;padding:13px 15px;border-radius:17px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}.bot{align-self:flex-start;background:var(--panel);border:1px solid var(--line);border-top-left-radius:5px}.user{align-self:flex-end;background:linear-gradient(135deg,#6548dc,#4b5fe8);border-top-right-radius:5px}
+.composer{position:sticky;bottom:8px;background:#11192bea;backdrop-filter:blur(15px);border:1px solid var(--line);border-radius:20px;padding:10px;display:flex;gap:9px;align-items:flex-end;box-shadow:0 14px 50px #0004}.composer textarea{flex:1;resize:vertical;min-height:48px;max-height:150px;background:transparent;color:var(--text);border:0;outline:0;padding:12px;line-height:1.5}.send{border:0;border-radius:14px;padding:13px 18px;background:linear-gradient(135deg,var(--accent),#536dfe);color:white;font-weight:700;cursor:pointer}.send:disabled{opacity:.5}.notice{font-size:12px;color:var(--muted);text-align:center;line-height:1.7;padding:8px 8px 0}footer{text-align:center;color:#7e8aa6;font-size:12px;padding:15px 0 4px}
+@media(min-width:700px){.app{padding:24px}.hero{padding-top:34px}.chat{padding:0 40px}.composer{margin:0 40px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="brand"><div class="logo">N</div><div><h1>NEDAL AI</h1><div class="tag" id="tagline">مساعدك الذكي، بلغتك</div></div></div>
+ <select id="language" aria-label="Language"><option value="ar">العربية</option><option value="de">Deutsch</option><option value="en">English</option></select>
+</header>
+<main>
+ <section class="hero" id="hero">
+  <div class="orb">✦</div><h2 id="welcome">أهلاً بك في NEDAL AI</h2>
+  <p id="intro">اسأل، تعلّم، اكتب، وترجم — كل ذلك من مكان واحد.</p>
+  <div class="chips"><button class="chip" data-prompt="ساعدني في تعلّم اللغة الألمانية للمبتدئين">🇩🇪 تعلّم الألمانية</button><button class="chip" data-prompt="ترجم هذه الجملة إلى الألمانية والإنجليزية: صباح الخير، كيف حالك؟">🌍 ترجمة</button><button class="chip" data-prompt="اكتب لي رسالة رسمية قصيرة إلى شركة أسأل فيها عن طلب التوظيف">✉️ كتابة رسالة</button></div>
+ </section>
+ <section class="chat" id="chat" aria-live="polite"></section>
+ <section>
+  <div class="composer"><textarea id="prompt" rows="1" placeholder="اكتب رسالتك هنا..." aria-label="Your message"></textarea><button class="send" id="send">إرسال ↑</button></div>
+  <div class="notice" id="notice">هذه نسخة أولية للواجهة. للحصول على إجابات ذكاء اصطناعي حقيقية، يجب ربط خدمة AI آمنة من خلال خادم؛ لا تضع مفتاح API داخل هذه الصفحة.</div>
+ </section>
+</main>
+<footer>© <span id="year"></span> NEDAL AI · نسخة تجريبية أولية</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const copy={
+ ar:{tag:'مساعدك الذكي، بلغتك',welcome:'أهلاً بك في NEDAL AI',intro:'اسأل، تعلّم، اكتب، وترجم — كل ذلك من مكان واحد.',placeholder:'اكتب رسالتك هنا...',send:'إرسال ↑',notice:'هذه نسخة أولية للواجهة. للحصول على إجابات ذكاء اصطناعي حقيقية، يجب ربط خدمة AI آمنة من خلال خادم؛ لا تضع مفتاح API داخل هذه الصفحة.',chips:['🇩🇪 تعلّم الألمانية','🌍 ترجمة','✉️ كتابة رسالة'],demo:'وصلت رسالتك إلى واجهة NEDAL AI التجريبية.\n\nحتى أجيبك فعلياً بالذكاء الاصطناعي، يلزم ربط خدمة ذكاء اصطناعي بخادم آمن. حالياً الواجهة والتبديل بين اللغات يعملان، لكن الاتصال بمحرك AI غير مفعّل بعد.'},
+ de:{tag:'Dein intelligenter Assistent',welcome:'Willkommen bei NEDAL AI',intro:'Frage, lerne, schreibe und übersetze – alles an einem Ort.',placeholder:'Schreibe deine Nachricht...',send:'Senden ↑',notice:'Dies ist ein erster UI-Prototyp. Für echte KI-Antworten muss ein KI-Dienst sicher über einen Server verbunden werden. API-Schlüssel niemals hier einfügen.',chips:['🇩🇪 Deutsch lernen','🌍 Übersetzen','✉️ Nachricht schreiben'],demo:'Deine Nachricht wurde von der NEDAL-AI-Demoseite empfangen.\n\nFür echte KI-Antworten muss ein KI-Dienst sicher über einen Server verbunden werden. Die Oberfläche und Sprachauswahl funktionieren bereits; die KI-Verbindung ist noch nicht aktiviert.'},
+ en:{tag:'Your assistant, in your language',welcome:'Welcome to NEDAL AI',intro:'Ask, learn, write, and translate — all in one place.',placeholder:'Type your message here...',send:'Send ↑',notice:'This is an initial UI prototype. Real AI answers require a secure server-side AI connection. Never put an API key in this page.',chips:['🇩🇪 Learn German','🌍 Translate','✉️ Write a message'],demo:'Your message reached the NEDAL AI demo interface.\n\nFor real AI answers, an AI service must be connected securely through a server. The interface and language selector work; the AI connection is not enabled yet.'}
+};
+function setLang(lang){const c=copy[lang]||copy.ar;document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';$('#tagline').textContent=c.tag;$('#welcome').textContent=c.welcome;$('#intro').textContent=c.intro;$('#prompt').placeholder=c.placeholder;$('#send').textContent=c.send;$('#notice').textContent=c.notice;document.querySelectorAll('.chip').forEach((b,i)=>b.textContent=c.chips[i]);}
+$('#language').addEventListener('change',e=>setLang(e.target.value));
+function add(text,cls){const d=document.createElement('div');d.className='msg '+cls;d.textContent=text;$('#chat').appendChild(d);d.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function sendMessage(text){text=(text||$('#prompt').value).trim();if(!text)return;add(text,'user');$('#prompt').value='';const lang=$('#language').value;setTimeout(()=>add(copy[lang].demo,'bot'),250);}
+$('#send').addEventListener('click',()=>sendMessage());
+$('#prompt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
+document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>sendMessage(b.dataset.prompt)));
+$('#year').textContent=new Date().getFullYear();setLang('ar');
+</script>
+</body></html>
