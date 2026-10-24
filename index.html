@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,677 +5,377 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090d19">
 <title>NEDAL AI - نضال</title>
-
 <style>
-:root {
-  color-scheme: dark;
-  --bg: #090d19;
-  --panel: #121a2c;
-  --line: #293650;
-  --text: #f4f6ff;
-  --muted: #9aa9c4;
-  --blue: #6685ff;
-  --purple: #a36cff;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: radial-gradient(ellipse at top,#20234a,transparent 45%),var(--bg);
-  color: var(--text);
-  font-family: system-ui, Arial, sans-serif;
-}
-button, textarea, select { font: inherit; }
-button { cursor: pointer; }
-.layout { min-height: 100dvh; max-width: 1100px; margin: auto; display: flex; }
-.sidebar {
-  width: 255px; flex-shrink: 0; background: #0d1322;
-  border-left: 1px solid var(--line); padding: 15px;
-  display: flex; flex-direction: column; gap: 12px;
-}
-.sidebar-top, .brand, .inputbox, .actions, .voice-settings {
-  display: flex; align-items: center; gap: 8px;
-}
-.sidebar-top { justify-content: space-between; }
-.brand { gap: 10px; }
-.logo {
-  width: 42px; height: 42px; display: grid; place-items: center;
-  border-radius: 13px; background: linear-gradient(135deg,var(--blue),var(--purple));
-  font-weight: 900; font-size: 23px;
-}
-.brand h1 { font-size: 17px; margin: 0; }
-.brand p { color: var(--muted); font-size: 11px; margin: 4px 0 0; }
-.btn, .copy, .speak {
-  background: var(--panel); color: var(--text);
-  border: 1px solid var(--line); border-radius: 10px; padding: 9px;
-}
-.primary { background: linear-gradient(135deg,#5278ed,#8658d6); border: 0; }
-.side-title { color: var(--muted); font-size: 12px; }
-.history { display: flex; flex-direction: column; gap: 6px; overflow: auto; max-height: 55vh; }
-.history-item { display: flex; gap: 4px; align-items: center; }
-.history-open {
-  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis;
-  white-space: nowrap; text-align: right; background: transparent;
-  color: #dce4fa; border: 0; border-radius: 8px; padding: 10px 6px;
-}
-.history-open.active, .history-open:hover { background: #202b43; }
-.delete { color: #ffaaaa; background: transparent; border: 0; padding: 7px; }
-.note { color: #7888a6; font-size: 11px; line-height: 1.8; margin-top: auto; }
-.main { min-width: 0; flex: 1; display: flex; flex-direction: column; min-height: 100dvh; padding: 16px; }
-.welcome { text-align: center; padding: 42px 8px 24px; }
-.orb {
-  width: 70px; height: 70px; margin: auto auto 15px;
-  display: grid; place-items: center; border-radius: 23px; font-size: 35px;
-  background: linear-gradient(135deg,#2b4b96,#653d9c);
-}
-.welcome h2 { font-size: clamp(24px,5vw,35px); margin: 0 0 10px; }
-.welcome h2 span {
-  background: linear-gradient(90deg,#78a6ff,#c89aff);
-  background-clip: text; color: transparent;
-}
-.welcome p { color: var(--muted); font-size: 14px; line-height: 1.9; }
-.suggestions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; margin-bottom: 18px; }
-.suggestion {
-  text-align: right; background: #11192b; color: var(--text);
-  border: 1px solid var(--line); border-radius: 14px; padding: 13px;
-}
-.suggestion strong { display: block; margin-bottom: 5px; }
-.suggestion small { color: var(--muted); }
-.chat { display: flex; flex-direction: column; gap: 14px; flex: 1; padding: 8px 0 20px; }
-.message {
-  max-width: 96%; padding: 13px 15px; line-height: 1.9;
-  white-space: pre-wrap; overflow-wrap: anywhere; border-radius: 16px;
-}
-.user { align-self: flex-start; background: linear-gradient(135deg,#334d91,#49377b); }
-.assistant { align-self: stretch; background: #121a2b; border: 1px solid var(--line); }
-.label { display: block; color: #aebfff; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
-.actions { flex-wrap: wrap; }
-.copy, .speak { color: var(--muted); font-size: 12px; margin-top: 10px; padding: 7px 10px; }
-.status { color: #c2d1ff; font-size: 13px; padding: 6px 0; line-height: 1.8; }
-.composer {
-  position: sticky; bottom: 0; background: linear-gradient(transparent,var(--bg) 15%);
-  padding: 12px 0 6px;
-}
-.inputbox {
-  align-items: flex-end; background: #121a2b;
-  border: 1px solid #354463; border-radius: 17px; padding: 8px;
-}
-textarea {
-  flex: 1; min-width: 0; resize: none; max-height: 140px; min-height: 42px;
-  border: 0; outline: 0; background: transparent; color: white;
-  padding: 10px; line-height: 1.6;
-}
-textarea::placeholder { color: #8291ac; }
-.send, .mic, .voice-chat {
-  width: 43px; height: 43px; flex-shrink: 0; border: 0;
-  border-radius: 13px; color: white; font-size: 19px;
-}
-.send { background: linear-gradient(135deg,var(--blue),var(--purple)); }
-.mic { background: #263653; }
-.voice-chat { background: linear-gradient(135deg,#3656a8,#7348ad); }
-.mic.recording, .voice-chat.active {
-  background: #b92f54; animation: pulse 1.2s infinite;
-}
-button:disabled { opacity: .5; cursor: not-allowed; }
-@keyframes pulse { 50% { box-shadow: 0 0 0 5px #b92f5433; } }
-.voice-settings { flex-wrap: wrap; margin-top: 10px; }
-.voice-settings label { font-size: 12px; color: var(--muted); }
-.voice-settings select {
-  background: #121a2b; color: var(--text); border: 1px solid var(--line);
-  border-radius: 9px; padding: 7px;
-}
-.hint { text-align: center; color: #7f8ba6; font-size: 11px; padding-top: 10px; line-height: 1.8; }
-footer { text-align: center; color: #6f7c96; font-size: 11px; padding: 14px 0; }
-.hidden { display: none !important; }
-@media(max-width:650px) {
-  .layout { display: block; }
-  .sidebar { width: auto; border-left: 0; border-bottom: 1px solid var(--line); padding: 11px; }
-  .sidebar-top .btn { font-size: 12px; padding: 8px; }
-  .history { flex-direction: row; max-height: none; overflow-x: auto; }
-  .history-item { min-width: 140px; max-width: 190px; background: #141d30; border-radius: 9px; }
-  .history-open { font-size: 12px; }
-  .note { display: none; }
-  .main { min-height: 65vh; padding: 11px; }
-  .welcome { padding: 28px 5px 18px; }
-  .suggestion { padding: 10px; font-size: 12px; }
-  .suggestion small { font-size: 10px; }
-}
+:root{color-scheme:dark;--bg:#090d19;--panel:#121a2c;--line:#293650;--text:#f4f6ff;--muted:#9aa9c4;--blue:#6685ff;--purple:#a36cff}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#20234a,transparent 45%),var(--bg);color:var(--text);font-family:system-ui,Arial,sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.layout{min-height:100dvh;max-width:1100px;margin:auto;display:flex}
+.sidebar{width:255px;flex-shrink:0;background:#0d1322;border-left:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:12px}
+.sidebar-top,.brand,.inputbox,.actions,.voice-settings{display:flex;align-items:center;gap:8px}
+.sidebar-top{justify-content:space-between}.brand{gap:10px}
+.logo{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,var(--blue),var(--purple));font-size:23px;font-weight:900}
+.brand h1{font-size:17px;margin:0}.brand p{color:var(--muted);font-size:11px;margin:4px 0 0}
+.btn,.copy,.speak{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px}
+.primary{background:linear-gradient(135deg,#5278ed,#8658d6);border:0}
+.side-title{color:var(--muted);font-size:12px}
+.auth-panel{display:flex;flex-direction:column;gap:8px;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.auth-panel input{width:100%;min-width:0;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px}
+.auth-actions{display:flex;gap:6px}.auth-actions button{flex:1;font-size:12px}
+.auth-status{font-size:11px;color:#b7c6e5;line-height:1.7;overflow-wrap:anywhere}
+.history{display:flex;flex-direction:column;gap:6px;overflow:auto;max-height:45vh}
+.history-item{display:flex;gap:4px;align-items:center}
+.history-open{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;background:transparent;color:#dce4fa;border:0;border-radius:8px;padding:10px 6px}
+.history-open.active,.history-open:hover{background:#202b43}
+.delete{color:#ffaaaa;background:transparent;border:0;padding:7px}
+.note{color:#7888a6;font-size:11px;line-height:1.8;margin-top:auto}
+.main{min-width:0;flex:1;display:flex;flex-direction:column;min-height:100dvh;padding:16px}
+.welcome{text-align:center;padding:36px 8px 22px}
+.orb{width:70px;height:70px;margin:auto auto 15px;display:grid;place-items:center;border-radius:23px;font-size:35px;background:linear-gradient(135deg,#2b4b96,#653d9c)}
+.welcome h2{font-size:clamp(24px,5vw,35px);margin:0 0 10px}
+.welcome h2 span{background:linear-gradient(90deg,#78a6ff,#c89aff);background-clip:text;color:transparent}
+.welcome p{color:var(--muted);font-size:14px;line-height:1.9}
+.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:18px}
+.suggestion{text-align:right;background:#11192b;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:13px}
+.suggestion strong{display:block;margin-bottom:5px}.suggestion small{color:var(--muted)}
+.chat{display:flex;flex-direction:column;gap:14px;flex:1;padding:8px 0 20px}
+.message{max-width:96%;padding:13px 15px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:16px}
+.user{align-self:flex-start;background:linear-gradient(135deg,#334d91,#49377b)}
+.assistant{align-self:stretch;background:#121a2b;border:1px solid var(--line)}
+.label{display:block;color:#aebfff;font-size:12px;font-weight:700;margin-bottom:6px}
+.actions{flex-wrap:wrap}.copy,.speak{color:var(--muted);font-size:12px;margin-top:10px;padding:7px 10px}
+.status{color:#c2d1ff;font-size:13px;padding:6px 0;line-height:1.8}
+.composer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 15%);padding:12px 0 6px}
+.inputbox{align-items:flex-end;background:#121a2b;border:1px solid #354463;border-radius:17px;padding:8px}
+textarea{flex:1;min-width:0;resize:none;max-height:140px;min-height:42px;border:0;outline:0;background:transparent;color:white;padding:10px;line-height:1.6}
+textarea::placeholder{color:#8291ac}
+.send,.mic,.voice-chat{width:43px;height:43px;flex-shrink:0;border:0;border-radius:13px;color:white;font-size:19px}
+.send{background:linear-gradient(135deg,var(--blue),var(--purple))}
+.mic{background:#263653}.voice-chat{background:linear-gradient(135deg,#3656a8,#7348ad)}
+.mic.recording,.voice-chat.active{background:#b92f54;animation:pulse 1.2s infinite}
+button:disabled{opacity:.5;cursor:not-allowed}
+@keyframes pulse{50%{box-shadow:0 0 0 5px #b92f5433}}
+.voice-settings{flex-wrap:wrap;margin-top:10px}
+.voice-settings label{font-size:12px;color:var(--muted)}
+.voice-settings select{background:#121a2b;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:7px}
+.hint{text-align:center;color:#7f8ba6;font-size:11px;padding-top:10px;line-height:1.8}
+footer{text-align:center;color:#6f7c96;font-size:11px;padding:14px 0}
+.hidden{display:none!important}
+@media(max-width:650px){.layout{display:block}.sidebar{width:auto;border-left:0;border-bottom:1px solid var(--line);padding:10px}.sidebar-top .btn{font-size:12px;padding:8px}.history{flex-direction:row;max-height:none;overflow-x:auto}.history-item{min-width:140px;max-width:190px;background:#141d30;border-radius:9px}.history-open{font-size:12px}.note{display:none}.main{min-height:65vh;padding:11px}.welcome{padding:25px 5px 17px}.suggestion{padding:10px;font-size:12px}.suggestion small{font-size:10px}}
 </style>
 </head>
-
 <body>
 <div class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-top">
-      <div class="brand">
-        <div class="logo">N</div>
-        <div><h1>NEDAL AI</h1><p>نضال - مساعدك الذكي</p></div>
-      </div>
-      <button class="btn primary" id="newChat">＋ جديد</button>
-    </div>
-    <div class="side-title">📚 سجل المحادثات</div>
-    <div class="history" id="history"></div>
-    <button class="btn" id="clearHistory">🗑️ حذف كل المحادثات</button>
-    <div class="note">تُحفظ المحادثات في هذا المتصفح على جهازك.</div>
-  </aside>
-
-  <main class="main">
-    <section class="welcome" id="welcome">
-      <div class="orb">✦</div>
-      <h2>أهلًا بك في <span>NEDAL AI</span></h2>
-      <p>أنا نضال، مساعدك الذكي. اكتب أو تحدث معي.</p>
-    </section>
-
-    <section class="suggestions" id="suggestions">
-      <button class="suggestion" data-prompt="علّمني اللغة الألمانية للمبتدئين بالعربية"><strong>🌍 تعلّم الألمانية</strong><small>ابدأ من المستوى A1</small></button>
-      <button class="suggestion" data-prompt="ساعدني في كتابة رسالة رسمية باللغة الألمانية"><strong>✍️ كتابة النصوص</strong><small>رسائل احترافية</small></button>
-      <button class="suggestion" data-prompt="اقترح لي أفكارًا لمشروع صغير بميزانية محدودة"><strong>💡 أفكار ومشاريع</strong><small>خطط عملية</small></button>
-      <button class="suggestion" data-prompt="اشرح لي الذكاء الاصطناعي بطريقة بسيطة"><strong>🧠 تعلّم واكتشف</strong><small>معلومات مبسطة</small></button>
-    </section>
-
-    <section class="chat" id="chat" aria-live="polite"></section>
-    <div class="status" id="status" role="status" aria-live="polite"></div>
-
-    <section class="composer">
-      <div class="inputbox">
-        <textarea id="message" rows="1" placeholder="اكتب رسالتك هنا..." aria-label="رسالتك"></textarea>
-        <button class="mic" id="mic" title="تحويل الكلام إلى نص" aria-label="تحويل الكلام إلى نص">🎤</button>
-        <button class="voice-chat" id="voiceChat" title="بدء المحادثة الصوتية" aria-label="بدء المحادثة الصوتية">〰️</button>
-        <button class="send" id="send" aria-label="إرسال">➤</button>
-      </div>
-      <div class="voice-settings">
-        <label for="speechLanguage">لغة التحدث:</label>
-        <select id="speechLanguage">
-          <option value="ar-SA">العربية</option>
-          <option value="de-DE">الألمانية</option>
-          <option value="en-US">الإنجليزية</option>
-        </select>
-        <button class="btn" id="stopSpeech">⏹ إيقاف الصوت</button>
-      </div>
-      <div class="hint">
-        🎤 يحوّل كلامك إلى نص. اضغط 〰️ للمحادثة الصوتية المتواصلة.<br>
-        يمكنك إيقاف المحادثة الصوتية بالضغط على زر الموجات مرة أخرى.
-      </div>
-    </section>
-    <footer>© 2026 NEDAL AI · نضال، مساعدك الذكي</footer>
-  </main>
+<aside class="sidebar">
+ <div class="sidebar-top">
+  <div class="brand"><div class="logo">N</div><div><h1>NEDAL AI</h1><p>نضال - مساعدك الذكي</p></div></div>
+  <button class="btn primary" id="newChat">＋ جديد</button>
+ </div>
+ <div class="auth-panel">
+  <strong>👤 حساب NEDAL AI</strong>
+  <div class="auth-status" id="authStatus">سجّل الدخول لمزامنة محادثاتك.</div>
+  <input id="authEmail" type="email" autocomplete="email" placeholder="البريد الإلكتروني">
+  <input id="authPassword" type="password" autocomplete="current-password" placeholder="كلمة المرور">
+  <div class="auth-actions"><button class="btn primary" id="signIn">دخول</button><button class="btn" id="signUp">إنشاء حساب</button></div>
+  <button class="btn hidden" id="signOut">تسجيل الخروج</button>
+ </div>
+ <div class="side-title">📚 سجل المحادثات</div>
+ <div class="history" id="history"></div>
+ <button class="btn" id="clearHistory">🗑️ حذف المحادثات المحلية</button>
+ <div class="note">تُحفظ المحادثات على الجهاز، وتُزامَن مع حسابك عند تسجيل الدخول.</div>
+</aside>
+<main class="main">
+ <section class="welcome" id="welcome"><div class="orb">✦</div><h2>أهلًا بك في <span>NEDAL AI</span></h2><p>أنا نضال، مساعدك الذكي. اكتب أو تحدث معي.</p></section>
+ <section class="suggestions" id="suggestions">
+  <button class="suggestion" data-prompt="علّمني اللغة الألمانية للمبتدئين بالعربية"><strong>🌍 تعلّم الألمانية</strong><small>ابدأ من المستوى A1</small></button>
+  <button class="suggestion" data-prompt="ساعدني في كتابة رسالة رسمية باللغة الألمانية"><strong>✍️ كتابة النصوص</strong><small>رسائل احترافية</small></button>
+  <button class="suggestion" data-prompt="اقترح لي أفكارًا لمشروع صغير بميزانية محدودة"><strong>💡 أفكار ومشاريع</strong><small>خطط عملية</small></button>
+  <button class="suggestion" data-prompt="اشرح لي الذكاء الاصطناعي بطريقة بسيطة"><strong>🧠 تعلّم واكتشف</strong><small>معلومات مبسطة</small></button>
+ </section>
+ <section class="chat" id="chat" aria-live="polite"></section>
+ <div class="status" id="status" role="status" aria-live="polite"></div>
+ <section class="composer">
+  <div class="inputbox"><textarea id="message" rows="1" placeholder="اكتب رسالتك هنا..." aria-label="رسالتك"></textarea><button class="mic" id="mic" title="تحويل الكلام إلى نص">🎤</button><button class="voice-chat" id="voiceChat" title="المحادثة الصوتية">〰️</button><button class="send" id="send" aria-label="إرسال">➤</button></div>
+  <div class="voice-settings"><label for="speechLanguage">لغة التحدث:</label><select id="speechLanguage"><option value="ar-SA">العربية</option><option value="de-DE">الألمانية</option><option value="en-US">الإنجليزية</option></select><button class="btn" id="stopSpeech">⏹ إيقاف الصوت</button></div>
+  <div class="hint">🎤 تحويل الكلام إلى نص · 〰️ للمحادثة الصوتية</div>
+ </section>
+ <footer>© 2026 NEDAL AI · نضال، مساعدك الذكي</footer>
+</main>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* حافظنا على عنوان الخدمة ومفتاح سجل المحادثات الحاليين */
-const API = "https://little-king-48cf.nedaljadaan3.workers.dev";
-const STORAGE_KEY = "nedal_ai_conversations_v1";
+"use strict";
+const API="https://little-king-48cf.nedaljadaan3.workers.dev";
+const SUPABASE_URL="https://kqonanuvfgddnrjjqesr.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="YOUR_SUPABASE_PUBLISHABLE_KEY";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const STORAGE_KEY="nedal_ai_conversations_v1";
+const $=id=>document.getElementById(id);
+const chat=$("chat"),input=$("message"),send=$("send"),mic=$("mic"),voiceChat=$("voiceChat"),statusBox=$("status"),welcome=$("welcome"),suggestions=$("suggestions"),historyBox=$("history"),speechLanguage=$("speechLanguage");
+const authStatus=$("authStatus"),authEmail=$("authEmail"),authPassword=$("authPassword"),signInButton=$("signIn"),signUpButton=$("signUp"),signOutButton=$("signOut");
+let conversations=loadConversations(),currentId=null,busy=false,recognition=null,recording=false,voiceChatActive=false,voiceSession=0,listenTimer=null,currentUser=null,cloudLoading=false;
 
-const $ = id => document.getElementById(id);
-const chat = $("chat");
-const input = $("message");
-const send = $("send");
-const mic = $("mic");
-const voiceChat = $("voiceChat");
-const statusBox = $("status");
-const welcome = $("welcome");
-const suggestions = $("suggestions");
-const historyBox = $("history");
-const speechLanguage = $("speechLanguage");
+function loadConversations(){try{const x=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");return Array.isArray(x)?x:[]}catch{return[]}}
+function saveConversations(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(conversations))}catch{statusBox.textContent="تعذّر حفظ المحادثات في هذا المتصفح."}}
+function makeId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function currentConversation(){return conversations.find(c=>c.id===currentId)}
+function setAuthStatus(t){authStatus.textContent=t}
 
-let conversations = loadConversations();
-let currentId = null;
-let busy = false;
-let recognition = null;
-let recording = false;
-let voiceChatActive = false;
-let voiceSession = 0;
+function createConversation(){const c={id:makeId(),dbId:null,syncedCount:0,title:"محادثة جديدة",messages:[],updated:Date.now()};conversations.unshift(c);currentId=c.id;saveConversations();renderHistory();renderConversation();return c}
+function ensureConversation(t){let c=currentConversation();if(!c)c=createConversation();if(!c.messages.length)c.title=t.replace(/\s+/g," ").slice(0,34)||"محادثة جديدة";c.updated=Date.now();return c}
 
-function loadConversations() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    return Array.isArray(saved) ? saved : [];
-  } catch {
-    return [];
+function renderHistory(){
+ historyBox.replaceChildren();
+ [...conversations].sort((a,b)=>(b.updated||0)-(a.updated||0)).forEach(c=>{
+  const row=document.createElement("div");row.className="history-item";
+  const open=document.createElement("button");open.className="history-open"+(c.id===currentId?" active":"");open.textContent="💬 "+(c.title||"محادثة جديدة");
+  open.onclick=()=>{currentId=c.id;statusBox.textContent="";renderHistory();renderConversation()};
+  const del=document.createElement("button");del.className="delete";del.textContent="×";del.title="حذف المحادثة";
+  del.onclick=()=>deleteConversation(c);
+  row.append(open,del);historyBox.append(row);
+ });
+}
+
+async function deleteConversation(c){
+ if(!confirm("هل تريد حذف هذه المحادثة؟"))return;
+ conversations=conversations.filter(x=>x.id!==c.id);
+ if(currentId===c.id)currentId=null;
+ saveConversations();renderHistory();renderConversation();
+ if(currentUser&&c.dbId){
+  try{const {error}=await db.from("conversations").delete().eq("id",c.dbId).eq("user_id",currentUser.id);if(error)throw error}
+  catch(e){setAuthStatus("حُذفت محليًا لكن تعذّر حذف النسخة السحابية: "+e.message)}
+ }
+}
+
+function renderConversation(){
+ chat.replaceChildren();const c=currentConversation(),has=!!(c&&c.messages.length);
+ welcome.classList.toggle("hidden",has);suggestions.classList.toggle("hidden",has);
+ if(c)c.messages.forEach(m=>addMessageElement(m.content,m.role,false));
+}
+
+function addMessageElement(text,role,scroll=true){
+ const box=document.createElement("div");box.className="message "+(role==="user"?"user":"assistant");
+ if(role!=="user"){const label=document.createElement("span");label.className="label";label.textContent="✦ NEDAL AI";box.append(label)}
+ const content=document.createElement("div");content.textContent=text;box.append(content);
+ if(role!=="user"){
+  const actions=document.createElement("div");actions.className="actions";
+  const copy=document.createElement("button");copy.className="copy";copy.textContent="📋 نسخ الإجابة";
+  copy.onclick=async()=>{try{await navigator.clipboard.writeText(text);copy.textContent="تم النسخ ✓"}catch{copy.textContent="تعذّر النسخ"}};
+  const speak=document.createElement("button");speak.className="speak";speak.textContent="🔊 استمع للإجابة";speak.onclick=()=>speakText(text,false);
+  actions.append(copy,speak);box.append(actions);
+ }
+ chat.append(box);if(scroll)box.scrollIntoView({behavior:"smooth",block:"end"});return box;
+}
+
+function detectLanguage(t){if(/[\u0600-\u06FF]/.test(t))return"ar-SA";if(/[äöüßÄÖÜ]/i.test(t))return"de-DE";return speechLanguage.value==="en-US"?"en-US":"en-US"}
+function speakText(text,continuous=false){
+ if(!("speechSynthesis"in window)){statusBox.textContent="متصفحك لا يدعم قراءة النص بصوت.";if(continuous)scheduleListening();return}
+ speechSynthesis.cancel();const session=voiceSession,u=new SpeechSynthesisUtterance(text);u.lang=detectLanguage(text);
+ u.onstart=()=>statusBox.textContent="🔊 نضال يتحدث الآن...";
+ u.onerror=e=>{if(!["canceled","interrupted"].includes(e.error))statusBox.textContent="تعذّرت قراءة الإجابة."};
+ u.onend=()=>{if(continuous&&voiceChatActive&&session===voiceSession)scheduleListening();else if(!voiceChatActive)statusBox.textContent=""};
+ speechSynthesis.speak(u);
+}
+function scheduleListening(){clearTimeout(listenTimer);if(!voiceChatActive)return;const s=voiceSession;statusBox.textContent="🎤 استعد للتحدث...";listenTimer=setTimeout(()=>{if(voiceChatActive&&s===voiceSession&&!busy&&!recording)startVoiceInput(true)},600)}
+
+async function signIn(){
+ const email=authEmail.value.trim(),password=authPassword.value;
+ if(!email||!password){setAuthStatus("أدخل البريد الإلكتروني وكلمة المرور.");return}
+ signInButton.disabled=signUpButton.disabled=true;setAuthStatus("جارٍ تسجيل الدخول...");
+ try{const {error}=await db.auth.signInWithPassword({email,password});if(error)throw error;setAuthStatus("تم تسجيل الدخول.")}
+ catch(e){setAuthStatus("تعذّر الدخول: "+e.message)}
+ finally{signInButton.disabled=signUpButton.disabled=false}
+}
+async function signUp(){
+ const email=authEmail.value.trim(),password=authPassword.value;
+ if(!email||!password){setAuthStatus("أدخل البريد الإلكتروني وكلمة المرور.");return}
+ if(password.length<6){setAuthStatus("اجعل كلمة المرور 6 أحرف على الأقل.");return}
+ signInButton.disabled=signUpButton.disabled=true;setAuthStatus("جارٍ إنشاء الحساب...");
+ try{const {data,error}=await db.auth.signUp({email,password});if(error)throw error;setAuthStatus(data.session?"تم إنشاء الحساب.":"تحقق من بريدك الإلكتروني لتأكيد الحساب، ثم سجّل الدخول.")}
+ catch(e){setAuthStatus("تعذّر إنشاء الحساب: "+e.message)}
+ finally{signInButton.disabled=signUpButton.disabled=false}
+}
+async function signOut(){const {error}=await db.auth.signOut();if(error)setAuthStatus("تعذّر تسجيل الخروج: "+error.message)}
+signInButton.onclick=signIn;signUpButton.onclick=signUp;signOutButton.onclick=signOut;
+
+function updateAuthUI(user){
+ const changed=(currentUser?.id||null)!==(user?.id||null);currentUser=user||null;
+ [authEmail,authPassword,signInButton,signUpButton].forEach(el=>el.classList.toggle("hidden",!!currentUser));
+ signOutButton.classList.toggle("hidden",!currentUser);
+ if(currentUser){setAuthStatus("تم الدخول. جارٍ تحميل سجل المحادثات...");if(changed)loadCloudConversations()}
+ else setAuthStatus("سجّل الدخول لمزامنة محادثاتك.");
+}
+db.auth.getSession().then(({data,error})=>{if(error)setAuthStatus("تعذّر التحقق من الحساب.");updateAuthUI(data?.session?.user||null)});
+db.auth.onAuthStateChange((_event,session)=>updateAuthUI(session?.user||null));
+
+async function syncConversationToCloud(c){
+ if(!currentUser||!c||c.syncing)return;
+ c.syncing=true;
+ try{
+  if(!c.dbId){
+   const {data,error}=await db.from("conversations").insert({user_id:currentUser.id,title:c.title||"محادثة جديدة"}).select("id").single();
+   if(error)throw error;c.dbId=data.id;c.syncedCount=0;
   }
-}
-
-function saveConversations() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
-  } catch {
-    statusBox.textContent = "تعذّر حفظ المحادثات في المتصفح.";
+  const pending=c.messages.slice(c.syncedCount||0);
+  if(pending.length){
+   const rows=pending.map(m=>({conversation_id:c.dbId,user_id:currentUser.id,role:m.role,content:m.content}));
+   const {error}=await db.from("messages").insert(rows);if(error)throw error;
+   c.syncedCount=c.messages.length;
   }
+  const {error}=await db.from("conversations").update({title:c.title||"محادثة جديدة",updated_at:new Date().toISOString()}).eq("id",c.dbId).eq("user_id",currentUser.id);
+  if(error)throw error;saveConversations();setAuthStatus("تم حفظ المحادثة في حسابك.");
+ }catch(e){setAuthStatus("الحفظ المحلي يعمل، لكن المزامنة فشلت: "+e.message)}
+ finally{c.syncing=false}
+}
+async function loadCloudConversations(){
+ if(!currentUser||cloudLoading)return;
+ cloudLoading=true;
+ try{
+  const uid=currentUser.id;
+  const {data:rows,error}=await db.from("conversations").select("id,title,created_at,updated_at").eq("user_id",uid).order("updated_at",{ascending:false});
+  if(error)throw error;
+  for(const r of rows||[]){
+   const {data:msgs,error:me}=await db.from("messages").select("role,content,created_at").eq("conversation_id",r.id).eq("user_id",uid).order("created_at",{ascending:true});
+   if(me)throw me;
+   const old=conversations.find(x=>x.dbId===r.id);
+   const c={id:old?.id||r.id,dbId:r.id,syncedCount:(msgs||[]).length,title:r.title||"محادثة جديدة",messages:(msgs||[]).map(m=>({role:m.role,content:m.content})),updated:Date.parse(r.updated_at||r.created_at)||Date.now()};
+   if(old){Object.assign(old,c)}else conversations.push(c);
+  }
+  saveConversations();renderHistory();renderConversation();
+  setAuthStatus("تم تحميل سجل المحادثات.");
+  for(const c of conversations.filter(x=>!x.dbId))await syncConversationToCloud(c);
+ }catch(e){setAuthStatus("تعذّر تحميل المحادثات: "+e.message)}
+ finally{cloudLoading=false}
 }
 
-function makeId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+function addSavedMessage(role,content){
+ const c=currentConversation();if(!c)return;
+ c.messages.push({role,content});c.updated=Date.now();
+ saveConversations();renderHistory();
+ if(currentUser)syncConversationToCloud(c);
 }
 
-function currentConversation() {
-  return conversations.find(c => c.id === currentId);
-}
-
-function createConversation() {
-  const c = { id: makeId(), title: "محادثة جديدة", messages: [], updated: Date.now() };
-  conversations.unshift(c);
-  currentId = c.id;
-  saveConversations();
-  renderHistory();
-  renderConversation();
-  return c;
-}
-
-function ensureConversation(text) {
-  let c = currentConversation();
-  if (!c) c = createConversation();
-  if (!c.messages.length) c.title = text.replace(/\s+/g," ").slice(0,34) || "محادثة جديدة";
-  c.updated = Date.now();
-  return c;
-}
-
-function renderHistory() {
-  historyBox.replaceChildren();
-  conversations.sort((a,b) => b.updated - a.updated);
-
-  conversations.forEach(c => {
-    const row = document.createElement("div");
-    row.className = "history-item";
-
-    const open = document.createElement("button");
-    open.className = "history-open" + (c.id === currentId ? " active" : "");
-    open.textContent = "💬 " + (c.title || "محادثة جديدة");
-    open.addEventListener("click", () => {
-      currentId = c.id;
-      statusBox.textContent = "";
-      renderHistory();
-      renderConversation();
-    });
-
-    const del = document.createElement("button");
-    del.className = "delete";
-    del.textContent = "×";
-    del.title = "حذف المحادثة";
-    del.addEventListener("click", () => {
-      if (!confirm("هل تريد حذف هذه المحادثة؟")) return;
-      conversations = conversations.filter(item => item.id !== c.id);
-      if (currentId === c.id) currentId = null;
-      saveConversations();
-      renderHistory();
-      renderConversation();
-    });
-
-    row.append(open,del);
-    historyBox.appendChild(row);
+async function askAI(){
+ if(busy)return;
+ const message=input.value.trim();if(!message)return;
+ if(recording&&recognition){try{recognition.stop()}catch{}}
+ const c=ensureConversation(message);currentId=c.id;
+ addSavedMessage("user",message);addMessageElement(message,"user");
+ input.value="";input.style.height="43px";
+ busy=true;send.disabled=mic.disabled=voiceChat.disabled=input.disabled=true;
+ welcome.classList.add("hidden");suggestions.classList.add("hidden");
+ statusBox.textContent=voiceChatActive?"لحظة، أجهّز الرد...":"";
+ const waiting=addMessageElement("لحظة من فضلك، أفكّر في إجابتك...","assistant");
+ try{
+  const history=c.messages.slice(-12).map(m=>({role:m.role,content:m.content}));
+  const response=await fetch(API,{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({message,history})
   });
-}
-
-function renderConversation() {
-  chat.replaceChildren();
-  const c = currentConversation();
-  const hasMessages = !!(c && c.messages.length);
-  welcome.classList.toggle("hidden",hasMessages);
-  suggestions.classList.toggle("hidden",hasMessages);
-  if (!c) return;
-  c.messages.forEach(m => addMessageElement(m.content,m.role,false));
-}
-
-function detectLanguage(text) {
-  if (/[\u0600-\u06FF]/.test(text)) return "ar-SA";
-  if (/[äöüßÄÖÜ]/i.test(text)) return "de-DE";
-  if (speechLanguage.value === "en-US") return "en-US";
-  return "en-US";
-}
-
-function speakText(text, isVoiceChat = false) {
-  if (!("speechSynthesis" in window)) {
-    statusBox.textContent = "متصفحك لا يدعم قراءة النص بصوت مسموع.";
-    if (isVoiceChat) scheduleListening();
-    return;
-  }
-
-  window.speechSynthesis.cancel();
-  const session = voiceSession;
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = detectLanguage(text);
-  utterance.rate = 1;
-  utterance.pitch = 1;
-
-  utterance.onstart = () => {
-    if (isVoiceChat && voiceChatActive && session === voiceSession) {
-      statusBox.textContent = "🔊 نضال يتحدث الآن...";
-    } else {
-      statusBox.textContent = "🔊 جارٍ قراءة الإجابة...";
-    }
-  };
-
-  utterance.onerror = event => {
-    if (event.error !== "canceled" && event.error !== "interrupted") {
-      statusBox.textContent = "تعذّرت قراءة الإجابة. جرّب مرة أخرى.";
-    }
-  };
-
-  utterance.onend = () => {
-    if (isVoiceChat && voiceChatActive && session === voiceSession) {
-      scheduleListening();
-    } else if (!voiceChatActive) {
-      statusBox.textContent = "";
-    }
-  };
-
-  window.speechSynthesis.speak(utterance);
-}
-
-let listenTimer = null;
-function scheduleListening() {
-  clearTimeout(listenTimer);
-  if (!voiceChatActive) return;
-
-  const session = voiceSession;
-  statusBox.textContent = "🎤 استعد للتحدث...";
-  listenTimer = setTimeout(() => {
-    if (voiceChatActive && session === voiceSession && !busy && !recording) {
-      startVoiceInput(true);
-    }
-  }, 500);
-}
-
-function addMessageElement(text, role, scroll = true) {
-  const box = document.createElement("div");
-  box.className = "message " + (role === "user" ? "user" : "assistant");
-
-  if (role !== "user") {
-    const label = document.createElement("span");
-    label.className = "label";
-    label.textContent = "✦ NEDAL AI";
-    box.appendChild(label);
-  }
-
-  const content = document.createElement("div");
-  content.textContent = text;
-  box.appendChild(content);
-
-  if (role !== "user") {
-    const actions = document.createElement("div");
-    actions.className = "actions";
-
-    const copy = document.createElement("button");
-    copy.className = "copy";
-    copy.textContent = "📋 نسخ الإجابة";
-    copy.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(text);
-        copy.textContent = "تم النسخ ✓";
-      } catch {
-        copy.textContent = "تعذّر النسخ";
-      }
-    });
-
-    const speak = document.createElement("button");
-    speak.className = "speak";
-    speak.textContent = "🔊 استمع للإجابة";
-    speak.addEventListener("click", () => speakText(text,false));
-
-    actions.append(copy,speak);
-    box.appendChild(actions);
-  }
-
-  chat.appendChild(box);
-  if (scroll) box.scrollIntoView({ behavior: "smooth", block: "end" });
-  return box;
-}
-
-function addSavedMessage(role,content) {
-  const c = currentConversation();
-  if (!c) return;
-  c.messages.push({role,content});
-  c.updated = Date.now();
-  saveConversations();
+  const raw=await response.text();let data;
+  try{data=JSON.parse(raw)}catch{throw new Error("وصل رد غير مفهوم من الخدمة.")}
+  if(!response.ok)throw new Error(data.error||"خطأ في الخدمة: "+response.status);
+  if(!data.reply)throw new Error(data.error||"لم تصل إجابة من الذكاء الاصطناعي.");
+  waiting.remove();
+  addSavedMessage("assistant",data.reply);
+  addMessageElement(data.reply,"assistant");
+  if(voiceChatActive)speakText(data.reply,true);
+  else statusBox.textContent="";
+ }catch(e){
+  waiting.remove();
+  const msg="تعذّر الحصول على إجابة. السبب: "+(e.message||"خطأ غير معروف");
+  addSavedMessage("assistant",msg);addMessageElement(msg,"assistant");
+  statusBox.textContent="تحقق من الإنترنت أو خدمة الذكاء الاصطناعي.";
+  if(voiceChatActive)scheduleListening();
+ }finally{
+  busy=false;send.disabled=mic.disabled=voiceChat.disabled=input.disabled=false;
   renderHistory();
+ }
 }
 
-async function askAI() {
-  if (busy) return;
-  const message = input.value.trim();
-  if (!message) return;
-
-  if (recording && recognition) {
-    try { recognition.stop(); } catch {}
-  }
-
-  const c = ensureConversation(message);
-  currentId = c.id;
-  addSavedMessage("user",message);
-  addMessageElement(message,"user");
-
-  input.value = "";
-  input.style.height = "43px";
-  busy = true;
-  send.disabled = true;
-  mic.disabled = true;
-  voiceChat.disabled = true;
-  input.disabled = true;
-  welcome.classList.add("hidden");
-  suggestions.classList.add("hidden");
-  statusBox.textContent = voiceChatActive ? "لحظة، أجهّز الرد..." : "";
-
-  const waiting = addMessageElement("لحظة من فضلك، أفكّر في إجابتك...","assistant");
-
-  try {
-    const response = await fetch(API,{
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({message})
-    });
-
-    const raw = await response.text();
-    let data;
-    try {
-      data = JSON.parse(raw);
-    } catch {
-      throw new Error("وصل رد غير مفهوم من الخدمة.");
-    }
-
-    if (!response.ok) throw new Error(data.error || "خطأ في الخدمة: " + response.status);
-    if (!data.reply) throw new Error(data.error || "لم تصل إجابة من الذكاء الاصطناعي.");
-
-    waiting.remove();
-    addSavedMessage("assistant",data.reply);
-    addMessageElement(data.reply,"assistant");
-
-    if (voiceChatActive) {
-      speakText(data.reply,true);
-    } else {
-      statusBox.textContent = "";
-    }
-  } catch (error) {
-    waiting.remove();
-    const msg = "تعذّر الحصول على إجابة. السبب: " + (error.message || "خطأ غير معروف");
-    addSavedMessage("assistant",msg);
-    addMessageElement(msg,"assistant");
-    statusBox.textContent = "تحقق من الإنترنت أو خدمة الذكاء الاصطناعي.";
-    if (voiceChatActive) scheduleListening();
-  } finally {
-    busy = false;
-    send.disabled = false;
-    mic.disabled = false;
-    voiceChat.disabled = false;
-    input.disabled = false;
-    renderHistory();
-  }
+function startVoiceInput(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){statusBox.textContent="التعرّف على الصوت غير مدعوم. جرّب Google Chrome.";return}
+ if(recording&&recognition){try{recognition.stop()}catch{}return}
+ try{
+  const rec=new SR();recognition=rec;rec.lang=speechLanguage.value;rec.continuous=false;rec.interimResults=true;
+  let finalText="",gotFinal=false;
+  rec.onstart=()=>{recording=true;mic.classList.add("recording");mic.textContent="⏹";statusBox.textContent="🎤 أنا أستمع إليك... تحدث الآن."};
+  rec.onresult=e=>{
+   let interim="";
+   for(let i=e.resultIndex;i<e.results.length;i++){
+    const r=e.results[i];
+    if(r.isFinal){finalText+=r[0].transcript+" ";gotFinal=true}
+    else interim+=r[0].transcript;
+   }
+   input.value=(finalText+interim).trim();
+   input.style.height="43px";input.style.height=Math.min(input.scrollHeight,140)+"px";
+  };
+  rec.onerror=e=>{
+   const errors={"not-allowed":"اسمح للمتصفح باستخدام الميكروفون.","no-speech":"لم أسمع كلامًا. حاول مجددًا.","network":"تعذّر الاتصال بخدمة التعرف على الصوت."};
+   statusBox.textContent=errors[e.error]||"حدث خطأ في الميكروفون: "+e.error;
+  };
+  rec.onend=()=>{
+   recording=false;mic.classList.remove("recording");mic.textContent="🎤";
+   if(recognition===rec)recognition=null;
+   const t=input.value.trim();
+   if(voiceChatActive&&t&&!busy&&gotFinal){askAI();return}
+   if(voiceChatActive&&!t){scheduleListening();return}
+   if(t)statusBox.textContent="تم تحويل الكلام إلى نص. راجعه ثم اضغط إرسال.";
+  };
+  rec.start();
+ }catch{recording=false;mic.classList.remove("recording");mic.textContent="🎤";statusBox.textContent="تعذّر تشغيل الميكروفون."}
 }
 
-function startVoiceInput(isContinuous = false) {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) {
-    statusBox.textContent = "التعرّف على الصوت غير مدعوم هنا. جرّب Google Chrome.";
-    return;
-  }
-
-  if (recording && recognition) {
-    try { recognition.stop(); } catch {}
-    return;
-  }
-
-  try {
-    const rec = new SpeechRecognition();
-    recognition = rec;
-    rec.lang = speechLanguage.value;
-    rec.continuous = false;
-    rec.interimResults = true;
-    rec.maxAlternatives = 1;
-
-    let finalText = "";
-    let gotFinal = false;
-
-    rec.onstart = () => {
-      recording = true;
-      mic.classList.add("recording");
-      mic.textContent = "⏹";
-      statusBox.textContent = "🎤 أنا أستمع إليك... تحدث الآن.";
-    };
-
-    rec.onresult = event => {
-      let interim = "";
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const result = event.results[i];
-        if (result.isFinal) {
-          finalText += result[0].transcript + " ";
-          gotFinal = true;
-        } else {
-          interim += result[0].transcript;
-        }
-      }
-      input.value = (finalText + interim).trim();
-      input.style.height = "43px";
-      input.style.height = Math.min(input.scrollHeight,140) + "px";
-    };
-
-    rec.onerror = event => {
-      const messages = {
-        "not-allowed": "اسمح للمتصفح باستخدام الميكروفون.",
-        "no-speech": "لم أسمع كلامًا. حاول مرة أخرى.",
-        "network": "تعذّر الاتصال بخدمة التعرف على الصوت.",
-        "audio-capture": "لم يتم العثور على ميكروفون."
-      };
-      statusBox.textContent = messages[event.error] || "حدث خطأ في الميكروفون: " + event.error;
-    };
-
-    rec.onend = () => {
-      recording = false;
-      mic.classList.remove("recording");
-      mic.textContent = "🎤";
-      if (recognition === rec) recognition = null;
-
-      const text = input.value.trim();
-
-      if (voiceChatActive && text && !busy && gotFinal) {
-        statusBox.textContent = "وصل كلامك، جارٍ تجهيز الرد...";
-        askAI();
-        return;
-      }
-
-      if (voiceChatActive && !text) {
-        statusBox.textContent = "لم يصل كلام واضح. سأحاول الاستماع مجددًا.";
-        scheduleListening();
-      } else if (text) {
-        statusBox.textContent = isContinuous
-          ? "تم التعرّف على الكلام."
-          : "تم تحويل كلامك إلى نص. راجعه ثم اضغط إرسال.";
-      }
-    };
-
-    rec.start();
-  } catch (error) {
-    recording = false;
-    mic.classList.remove("recording");
-    mic.textContent = "🎤";
-    if (voiceChatActive) scheduleListening();
-    statusBox.textContent = "تعذّر تشغيل الميكروفون. حاول مرة أخرى.";
-  }
+function stopVoiceChat(){
+ voiceChatActive=false;voiceSession++;clearTimeout(listenTimer);
+ voiceChat.classList.remove("active");voiceChat.textContent="〰️";
+ if(recognition&&recording){try{recognition.stop()}catch{}}
+ if("speechSynthesis"in window)speechSynthesis.cancel();
+ statusBox.textContent="تم إيقاف المحادثة الصوتية.";
 }
+voiceChat.onclick=()=>{
+ if(voiceChatActive){stopVoiceChat();return}
+ voiceChatActive=true;voiceSession++;
+ voiceChat.classList.add("active");voiceChat.textContent="⏹";
+ if("speechSynthesis"in window)speechSynthesis.cancel();
+ startVoiceInput();
+};
 
-function stopVoiceChat() {
-  voiceChatActive = false;
-  voiceSession++;
-  clearTimeout(listenTimer);
-  voiceChat.classList.remove("active");
-  voiceChat.textContent = "〰️";
-  if (recognition && recording) {
-    try { recognition.stop(); } catch {}
-  }
-  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-  statusBox.textContent = "تم إيقاف المحادثة الصوتية.";
+function newChat(){
+ stopVoiceChat();
+ if(recording&&recognition){try{recognition.stop()}catch{}}
+ if("speechSynthesis"in window)speechSynthesis.cancel();
+ currentId=null;statusBox.textContent="";input.value="";
+ renderConversation();renderHistory();input.focus();
 }
-
-voiceChat.addEventListener("click", () => {
-  if (voiceChatActive) {
-    stopVoiceChat();
-    return;
-  }
-
-  voiceChatActive = true;
-  voiceSession++;
-  voiceChat.classList.add("active");
-  voiceChat.textContent = "⏹";
-  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-  statusBox.textContent = "تم تشغيل المحادثة الصوتية. تحدث الآن.";
-  startVoiceInput(true);
+$("newChat").onclick=newChat;
+send.onclick=askAI;
+mic.onclick=()=>startVoiceInput();
+$("stopSpeech").onclick=()=>{
+ if("speechSynthesis"in window)speechSynthesis.cancel();
+ statusBox.textContent="تم إيقاف الصوت.";
+};
+input.addEventListener("keydown",e=>{
+ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();askAI()}
 });
-
-function newChat() {
-  stopVoiceChat();
-  if (recording && recognition) {
-    try { recognition.stop(); } catch {}
-  }
-  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-  currentId = null;
-  statusBox.textContent = "";
-  input.value = "";
-  renderConversation();
-  renderHistory();
-  input.focus();
-}
-
-$("newChat").addEventListener("click",newChat);
-send.addEventListener("click",askAI);
-mic.addEventListener("click",() => startVoiceInput(false));
-
-$("stopSpeech").addEventListener("click",() => {
-  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-  if (voiceChatActive) {
-    statusBox.textContent = "تم إيقاف قراءة الصوت. اضغط زر الموجات لإنهاء المحادثة.";
-  } else {
-    statusBox.textContent = "تم إيقاف الصوت.";
-  }
+input.addEventListener("input",()=>{
+ input.style.height="43px";
+ input.style.height=Math.min(input.scrollHeight,140)+"px";
 });
+suggestions.onclick=e=>{
+ const b=e.target.closest("[data-prompt]");
+ if(b){input.value=b.dataset.prompt;askAI()}
+};
+$("clearHistory").onclick=()=>{
+ if(!confirm("حذف جميع المحادثات من هذا الجهاز؟"))return;
+ conversations=[];currentId=null;saveConversations();
+ renderHistory();renderConversation();
+ statusBox.textContent="تم حذف السجل المحلي. قد تبقى النسخ السحابية في حسابك.";
+};
 
-input.addEventListener("keydown",event => {
-  if (event.key === "Enter" && !event.shiftKey) {
-    event.preventDefault();
-    askAI();
-  }
-});
-
-input.addEventListener("input",() => {
-  input.style.height = "43px";
-  input.style.height = Math.min(input.scrollHeight,140) + "px";
-});
-
-suggestions.addEventListener("click",event => {
-  const btn = event.target.closest("[data-prompt]");
-  if (!btn) return;
-  input.value = btn.dataset.prompt;
-  askAI();
-});
-
-$("clearHistory").addEventListener("click",() => {
-  if (!confirm("هل تريد حذف جميع المحادثات المحفوظة؟ لا يمكن التراجع.")) return;
-  conversations = [];
-  currentId = null;
-  saveConversations();
-  renderHistory();
-  renderConversation();
-  statusBox.textContent = "تم حذف المحادثات من هذا المتصفح.";
-});
-
-renderHistory();
-renderConversation();
+renderHistory();renderConversation();
 </script>
 </body>
 </html>
