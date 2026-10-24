@@ -3,139 +3,512 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>NEDAL AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="NEDAL AI - مساعدك الذكي للكتابة والتعلم والإبداع">
+  <title>NEDAL AI | مساعدك الذكي</title>
+
   <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b16;
+      --panel: #101629;
+      --panel2: #151d33;
+      --border: #29334d;
+      --text: #f5f7ff;
+      --muted: #9aa8c5;
+      --blue: #6385ff;
+      --purple: #a66bff;
+    }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #0b1020;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 85% 0%, #25204b 0%, transparent 38%),
+        radial-gradient(ellipse at 0% 60%, #102647 0%, transparent 35%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    button, textarea { font: inherit; }
+
+    button { cursor: pointer; }
+
+    .app {
+      width: 100%;
+      max-width: 950px;
+      min-height: 100vh;
+      margin: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0 22px;
+      border-bottom: 1px solid #ffffff12;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .logo {
+      width: 45px;
+      height: 45px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      font-size: 22px;
+      font-weight: 900;
+      box-shadow: 0 5px 28px #8065ff38;
+    }
+
+    .brand h1 {
+      font-size: 19px;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    .brand p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 4px 0 0;
+    }
+
+    .new-chat {
+      background: var(--panel2);
       color: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 13px;
+      white-space: nowrap;
     }
-    main { max-width: 650px; margin: auto; }
-    h1 { text-align: center; color: #75a7ff; }
-    .subtitle { text-align: center; color: #c4cee2; }
-    #chat {
-      height: 55vh;
-      min-height: 280px;
-      overflow-y: auto;
-      padding: 12px;
-      margin: 20px 0;
-      background: #151d32;
-      border: 1px solid #34425f;
-      border-radius: 14px;
+
+    .new-chat:hover { border-color: var(--blue); }
+
+    .welcome {
+      text-align: center;
+      padding: 45px 8px 26px;
     }
-    .msg {
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 10px;
+
+    .orb {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 25px;
+      font-size: 35px;
+      background: linear-gradient(135deg, #263e80, #592c80);
+      box-shadow: 0 0 50px #725cff25;
+    }
+
+    .welcome h2 {
+      font-size: clamp(25px, 5vw, 36px);
+      margin: 0 0 12px;
+    }
+
+    .welcome h2 span {
+      background: linear-gradient(90deg, #76a1ff, #c28aff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .welcome p {
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 14px;
+      margin: 0 auto;
+      max-width: 470px;
+    }
+
+    .suggestions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 0 25px;
+    }
+
+    .suggestion {
+      text-align: right;
+      background: #11182a;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 15px;
+      line-height: 1.6;
+      transition: .2s;
+    }
+
+    .suggestion:hover {
+      background: #1a2440;
+      border-color: #7188ff;
+      transform: translateY(-2px);
+    }
+
+    .suggestion strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .suggestion small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 5px 0 20px;
+    }
+
+    .message {
+      max-width: 88%;
+      line-height: 1.9;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
-      line-height: 1.6;
+      padding: 13px 16px;
+      border-radius: 17px;
+      font-size: 15px;
     }
-    .user { background: #243d68; }
-    .ai { background: #202a40; }
-    form { display: flex; gap: 8px; }
+
+    .user-message {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #334a91, #49377b);
+      border-bottom-left-radius: 5px;
+    }
+
+    .ai-message {
+      align-self: flex-end;
+      width: 100%;
+      background: #11182a;
+      border: 1px solid var(--border);
+      border-bottom-right-radius: 5px;
+    }
+
+    .message-label {
+      display: block;
+      font-size: 11px;
+      color: #aebfff;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .message-actions {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 8px;
+    }
+
+    .copy-btn {
+      color: var(--muted);
+      border: 1px solid var(--border);
+      background: transparent;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+
+    .composer {
+      position: sticky;
+      bottom: 0;
+      margin-top: auto;
+      padding: 12px 0 8px;
+      background: linear-gradient(transparent, var(--bg) 18%);
+    }
+
+    .input-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid #384568;
+      background: #11182a;
+      border-radius: 19px;
+      box-shadow: 0 12px 40px #0003;
+    }
+
     textarea {
       flex: 1;
       min-width: 0;
-      padding: 12px;
-      font-size: 16px;
-      color: white;
-      background: #151d32;
-      border: 1px solid #465574;
-      border-radius: 10px;
-    }
-    button {
-      padding: 12px 16px;
-      background: #477cf5;
-      color: white;
+      resize: none;
+      max-height: 150px;
+      min-height: 43px;
+      padding: 11px 8px;
       border: 0;
-      border-radius: 10px;
-      font-size: 16px;
+      outline: none;
+      color: white;
+      background: transparent;
+      line-height: 1.6;
     }
-    button:disabled { opacity: .6; }
-    #status { color: #c4cee2; font-size: 14px; }
+
+    textarea::placeholder { color: #8794b0; }
+
+    .send {
+      flex-shrink: 0;
+      width: 45px;
+      height: 45px;
+      border: 0;
+      border-radius: 14px;
+      color: white;
+      font-size: 21px;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+    }
+
+    .send:disabled { opacity: .5; cursor: wait; }
+
+    .hint {
+      color: #7f8ba6;
+      font-size: 11px;
+      text-align: center;
+      padding: 10px 0 0;
+    }
+
+    .status {
+      color: #9ba9c5;
+      font-size: 13px;
+      padding: 0 5px;
+    }
+
+    .hidden { display: none !important; }
+
+    footer {
+      color: #74809b;
+      text-align: center;
+      font-size: 11px;
+      padding: 16px 0 4px;
+    }
+
+    @media (max-width: 480px) {
+      .app { padding: 13px; }
+      .brand h1 { font-size: 17px; }
+      .new-chat { font-size: 12px; padding: 9px; }
+      .welcome { padding-top: 35px; }
+      .suggestions { gap: 8px; }
+      .suggestion { padding: 12px; }
+      .message { max-width: 95%; }
+    }
   </style>
 </head>
-<body>
-<main>
-  <h1>NEDAL AI</h1>
-  <p class="subtitle">مساعدك الذكي — اسألني ما تريد</p>
 
-  <div id="chat" aria-live="polite">
-    <div class="msg ai">مرحبًا! أنا NEDAL AI. اكتب سؤالك لنبدأ.</div>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">N</div>
+        <div>
+          <h1>NEDAL AI</h1>
+          <p>مساعدك الذكي</p>
+        </div>
+      </div>
+      <button class="new-chat" id="newChat">＋ محادثة جديدة</button>
+    </header>
+
+    <section class="welcome" id="welcome">
+      <div class="orb">✦</div>
+      <h2>أهلًا بك في <span>NEDAL AI</span></h2>
+      <p>ماذا تريد أن تنجز اليوم؟ اسأل، تعلّم، اكتب، أو استكشف أفكارًا جديدة مع مساعدك الذكي.</p>
+    </section>
+
+    <section class="suggestions" id="suggestions">
+      <button class="suggestion" data-prompt="علّمني اللغة الألمانية للمبتدئين بالعربية">
+        <strong>🌍 تعلّم اللغات</strong>
+        <small>تعلّم الألمانية خطوة بخطوة</small>
+      </button>
+      <button class="suggestion" data-prompt="ساعدني في كتابة رسالة رسمية باللغة الألمانية">
+        <strong>✍️ كتابة النصوص</strong>
+        <small>رسائل ونصوص احترافية</small>
+      </button>
+      <button class="suggestion" data-prompt="اقترح لي أفكارًا لمشروع جديد بميزانية صغيرة">
+        <strong>💡 أفكار ومشاريع</strong>
+        <small>اكتشف أفكارًا جديدة</small>
+      </button>
+      <button class="suggestion" data-prompt="اشرح لي الذكاء الاصطناعي بطريقة بسيطة">
+        <strong>🧠 تعلّم واكتشف</strong>
+        <small>افهم المواضيع بسهولة</small>
+      </button>
+    </section>
+
+    <main class="chat" id="chat" aria-live="polite"></main>
+    <div class="status" id="status" role="status"></div>
+
+    <section class="composer">
+      <div class="input-box">
+        <textarea id="message" rows="1" placeholder="اكتب رسالتك هنا..." aria-label="اكتب رسالتك"></textarea>
+        <button class="send" id="send" aria-label="إرسال الرسالة">➤</button>
+      </div>
+      <div class="hint">قد يخطئ الذكاء الاصطناعي أحيانًا، فتحقّق من المعلومات المهمة.</div>
+    </section>
+
+    <footer>© 2026 NEDAL AI · صُنع بشغف ✦</footer>
   </div>
 
-  <form id="form">
-    <textarea id="question" rows="2"
-      placeholder="اكتب سؤالك هنا..." required></textarea>
-    <button id="send" type="submit">إرسال</button>
-  </form>
-  <p id="status">جاهز لاستقبال سؤالك</p>
-</main>
+  <script>
+    // رابط Cloudflare الحالي - لا تغيّره
+    const API = "https://little-king-48cf.nedaljadaan3.workers.dev";
 
-<script>
-const API = "https://little-king-48cf.nedaljadaan3.workers.dev";
-const chat = document.getElementById("chat");
-const form = document.getElementById("form");
-const question = document.getElementById("question");
-const send = document.getElementById("send");
-const status = document.getElementById("status");
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("message");
+    const send = document.getElementById("send");
+    const statusBox = document.getElementById("status");
+    const welcome = document.getElementById("welcome");
+    const suggestions = document.getElementById("suggestions");
 
-function addMessage(text, type) {
-  const div = document.createElement("div");
-  div.className = "msg " + type;
-  div.textContent = text;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
+    let busy = false;
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const message = question.value.trim();
-  if (!message) return;
+    function addMessage(text, type) {
+      const box = document.createElement("div");
+      box.className = "message " +
+        (type === "user" ? "user-message" : "ai-message");
 
-  addMessage(message, "user");
-  question.value = "";
-  send.disabled = true;
-  status.textContent = "جارٍ الاتصال بالذكاء الاصطناعي...";
+      if (type === "ai") {
+        const label = document.createElement("span");
+        label.className = "message-label";
+        label.textContent = "✦ NEDAL AI";
+        box.appendChild(label);
+      }
 
-  try {
-    const response = await fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message })
+      const content = document.createElement("div");
+      content.textContent = text;
+      box.appendChild(content);
+
+      if (type === "ai") {
+        const actions = document.createElement("div");
+        actions.className = "message-actions";
+
+        const copy = document.createElement("button");
+        copy.className = "copy-btn";
+        copy.textContent = "نسخ الإجابة";
+        copy.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(text);
+            copy.textContent = "تم النسخ ✓";
+          } catch {
+            copy.textContent = "تعذّر النسخ";
+          }
+        });
+
+        actions.appendChild(copy);
+        box.appendChild(actions);
+      }
+
+      chat.appendChild(box);
+      box.scrollIntoView({ behavior: "smooth", block: "end" });
+      return box;
+    }
+
+    async function askAI() {
+      if (busy) return;
+
+      const message = input.value.trim();
+      if (!message) {
+        input.focus();
+        return;
+      }
+
+      busy = true;
+      send.disabled = true;
+      input.disabled = true;
+      welcome.classList.add("hidden");
+      suggestions.classList.add("hidden");
+      statusBox.textContent = "";
+
+      addMessage(message, "user");
+      input.value = "";
+      input.style.height = "43px";
+
+      const waiting = addMessage("لحظة من فضلك، أفكّر في إجابتك...", "ai");
+
+      try {
+        const response = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+
+        const raw = await response.text();
+        let data;
+
+        try {
+          data = JSON.parse(raw);
+        } catch {
+          throw new Error("وصل رد غير مفهوم من الخدمة. تحقق من إعدادات Cloudflare.");
+        }
+
+        if (!response.ok) {
+          throw new Error(data.error || "خطأ في الخدمة: " + response.status);
+        }
+
+        if (!data.reply) {
+          throw new Error(data.error || "لم تصل إجابة من الذكاء الاصطناعي.");
+        }
+
+        waiting.remove();
+        addMessage(data.reply, "ai");
+
+      } catch (error) {
+        waiting.remove();
+        const err = addMessage(
+          "تعذّر الحصول على إجابة.\nسبب الخطأ: " +
+          (error.message || "خطأ غير معروف"),
+          "ai"
+        );
+        statusBox.textContent = "تحقق من اتصال الإنترنت وإعدادات الخدمة.";
+      } finally {
+        busy = false;
+        send.disabled = false;
+        input.disabled = false;
+        input.focus();
+      }
+    }
+
+    function newChat() {
+      chat.replaceChildren();
+      welcome.classList.remove("hidden");
+      suggestions.classList.remove("hidden");
+      statusBox.textContent = "";
+      input.value = "";
+      input.focus();
+    }
+
+    send.addEventListener("click", askAI);
+
+    input.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        askAI();
+      }
     });
 
-    const raw = await response.text();
-    let data;
+    input.addEventListener("input", () => {
+      input.style.height = "43px";
+      input.style.height = Math.min(input.scrollHeight, 150) + "px";
+    });
 
-    try {
-      data = JSON.parse(raw);
-    } catch {
-      throw new Error("استجابة غير مفهومة من Cloudflare: " + raw.slice(0, 250));
-    }
+    document.getElementById("newChat").addEventListener("click", newChat);
 
-    if (!response.ok) {
-      throw new Error(data.error || "خطأ HTTP " + response.status);
-    }
-
-    if (data.error) throw new Error(data.error);
-
-    addMessage(data.reply || "لم يصل رد من الذكاء الاصطناعي.", "ai");
-    status.textContent = "تم الرد";
-
-  } catch (error) {
-    addMessage("سبب الخطأ: " + (error.message || String(error)), "ai");
-    status.textContent = "فشل الاتصال. اقرأ رسالة الخطأ أعلاه.";
-  } finally {
-    send.disabled = false;
-    question.focus();
-  }
-});
-</script>
+    suggestions.addEventListener("click", event => {
+      const button = event.target.closest("[data-prompt]");
+      if (!button) return;
+      input.value = button.dataset.prompt;
+      askAI();
+    });
+  </script>
 </body>
 </html>
