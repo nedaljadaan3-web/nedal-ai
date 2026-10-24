@@ -7,15 +7,14 @@
 <meta name="theme-color" content="#090d19">
 <title>NEDAL AI</title>
 <style>
-
 :root {
   color-scheme: dark;
-  --bg: #0b1020;
-  --panel: #151c2e;
-  --line: #2a3550;
-  --text: #f4f6ff;
-  --muted: #a6b1c9;
-  --blue: #7167f9;
+  --bg: #212121;
+  --panel: #2f2f2f;
+  --line: #444444;
+  --text: #ececec;
+  --muted: #a1a1aa;
+  --blue: #10a37f;
 }
 
 * {
@@ -25,11 +24,9 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse at top, #20264b 0%, transparent 55%),
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
-  font-family: system-ui, Arial, sans-serif;
+  font-family: Arial, system-ui, sans-serif;
 }
 
 button, input, textarea {
@@ -38,53 +35,58 @@ button, input, textarea {
 
 button {
   cursor: pointer;
-  transition: background .2s, transform .2s, border-color .2s;
+  color: var(--text);
+  background: #383838;
+  border: 1px solid #505050;
+  border-radius: 10px;
+  padding: 11px 14px;
+  min-height: 42px;
 }
 
 button:hover {
-  border-color: #8178ff;
-  transform: translateY(-1px);
+  background: #454545;
 }
 
 button:disabled {
   opacity: .5;
   cursor: not-allowed;
-  transform: none;
 }
 
 .page {
-  width: min(100%, 960px);
+  width: 100%;
+  max-width: 1400px;
   margin: auto;
-  padding: 24px 16px 40px;
+  padding: 12px 20px 24px;
 }
 
 .panel {
-  background: rgba(21, 28, 46, .92);
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  padding: 22px;
-  margin-bottom: 18px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, .16);
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 10px;
+  box-shadow: none;
 }
 
 header.panel {
-  background: linear-gradient(135deg, #24264c, #151c2e);
-  border-color: #45416f;
-}
-
-h1, h2, p {
-  margin-top: 0;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--bg);
 }
 
 h1 {
-  font-size: clamp(25px, 5vw, 34px);
-  margin-bottom: 8px;
-  letter-spacing: -.5px;
+  font-size: 22px;
+  margin: 0 0 6px;
 }
 
 h2 {
-  font-size: 19px;
-  margin-bottom: 16px;
+  font-size: 17px;
+  margin: 0 0 14px;
+}
+
+p {
+  margin-top: 0;
 }
 
 .muted {
@@ -96,18 +98,17 @@ h2 {
 input, textarea {
   display: block;
   width: 100%;
-  background: #0d1324;
+  background: #212121;
   color: var(--text);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 14px;
-  margin: 8px 0 16px;
+  border: 1px solid #505050;
+  border-radius: 12px;
+  padding: 13px;
+  margin: 8px 0 14px;
   outline: none;
 }
 
 input:focus, textarea:focus {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(113, 103, 249, .15);
+  border-color: #888;
 }
 
 textarea {
@@ -115,25 +116,19 @@ textarea {
   line-height: 1.7;
 }
 
-button {
-  border: 1px solid var(--line);
-  background: #222d46;
+.primary {
+  background: var(--blue);
+  border-color: var(--blue);
   color: white;
-  padding: 12px 16px;
-  border-radius: 13px;
-  min-height: 44px;
 }
 
-.primary {
-  background: linear-gradient(135deg, #8175ff, #5d5ce2);
-  border: 0;
-  color: white;
-  font-weight: 650;
+.primary:hover {
+  background: #0e906f;
 }
 
 .row {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -141,70 +136,118 @@ button {
   flex: 1;
 }
 
+#auth {
+  max-width: 480px;
+  margin: 40px auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
 #app {
   display: none;
+}
+
+#app[style*="display: block"] {
+  display: grid !important;
+  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-rows: auto minmax(400px, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+#app > .panel:first-child {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  border-bottom: 1px solid var(--line);
+}
+
+#app > .panel:nth-child(2) {
+  grid-column: 1;
+  grid-row: 2;
+  background: #181818;
+  border-radius: 14px;
+  min-height: 400px;
+}
+
+#app > .panel:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  max-width: 850px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 #history {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
 }
 
 .history-item {
   display: flex;
-  gap: 8px;
+  gap: 5px;
 }
 
 .history-item button:first-child {
   flex: 1;
+  min-width: 0;
   text-align: right;
   overflow-wrap: anywhere;
+  background: transparent;
+  border-color: transparent;
+}
+
+.history-item button:last-child {
+  padding: 8px;
 }
 
 #messages {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  min-height: 150px;
+  gap: 18px;
+  min-height: 250px;
   max-height: 55vh;
   overflow-y: auto;
-  padding: 4px 2px 14px;
+  padding: 16px 4px;
   margin-bottom: 18px;
 }
 
 .message {
-  padding: 14px 16px;
-  border: 1px solid var(--line);
-  border-radius: 17px;
+  padding: 13px 17px;
+  border-radius: 18px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   line-height: 1.9;
 }
 
 .user {
-  background: #293568;
-  border-color: #414e91;
+  background: #303030;
   align-self: flex-start;
-  max-width: 95%;
+  max-width: 90%;
 }
 
 .assistant {
-  background: #1b263b;
+  background: transparent;
   align-self: stretch;
+}
+
+#prompt {
+  min-height: 100px;
 }
 
 #status {
   white-space: pre-wrap;
-  font-size: 14px;
   color: #f5cf7b;
-  margin-top: 12px;
+  font-size: 14px;
   line-height: 1.7;
+  margin-top: 10px;
 }
 
 label {
   display: block;
-  color: #dbe2f6;
+  color: #d4d4d4;
   font-size: 14px;
 }
 
@@ -212,31 +255,48 @@ label {
   display: none !important;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .page {
-    padding: 12px 10px 28px;
+    padding: 8px;
   }
 
-  .panel {
-    padding: 16px;
-    border-radius: 18px;
-    margin-bottom: 12px;
+  header.panel {
+    padding: 12px;
   }
 
-  .row {
-    gap: 8px;
+  #app[style*="display: block"] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    gap: 4px;
   }
 
-  .row button {
-    min-width: 110px;
-    padding: 11px 10px;
+  #app > .panel:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  #app > .panel:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: auto;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  #app > .panel:nth-child(3) {
+    grid-column: 1;
+    grid-row: 3;
+    padding: 10px 4px;
   }
 
   #messages {
-    max-height: 50vh;
+    max-height: 45vh;
+  }
+
+  .panel {
+    padding: 12px;
   }
 }
-
 </style>
 </head>
 <body>
