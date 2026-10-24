@@ -65,12 +65,13 @@ export default {
         { status: 200, headers }
       );
     } catch (error) {
-      return new Response(
-        JSON.stringify({
-          error: "فشل طلب الذكاء الاصطناعي. تحقق من إعداد AI وتوفر النموذج."
-        }),
-        { status: 500, headers }
-      );
-    }
+     } catch (error) {
+  return new Response(
+    JSON.stringify({
+      error: String(error?.message || error)
+    }),
+    { status: 500, headers }
+  );
+} 
   }
 };
