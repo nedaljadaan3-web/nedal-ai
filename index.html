@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090d19">
-<title>NEDAL AI</title>
+<title>NEDAL AI - نضال</title>
 <style>
 :root{color-scheme:dark;--bg:#090d19;--panel:#121a2c;--line:#293650;--text:#f4f6ff;--muted:#9aa9c4;--blue:#6685ff;--purple:#a36cff}
 *{box-sizing:border-box}
@@ -29,12 +29,11 @@ button{cursor:pointer}
 .delete{background:transparent;border:0;color:#8794ad;padding:7px}
 .note{font-size:11px;color:#7888a6;line-height:1.8;margin-top:auto}
 .main{min-width:0;flex:1;display:flex;flex-direction:column;min-height:100dvh;padding:18px}
-.mobilebar{display:none}
 .welcome{text-align:center;padding:48px 10px 26px}
 .orb{font-size:35px;width:72px;height:72px;margin:auto auto 17px;display:grid;place-items:center;border-radius:23px;background:linear-gradient(135deg,#2b4b96,#653d9c)}
 .welcome h2{font-size:clamp(24px,5vw,35px);margin:0 0 12px}
 .welcome h2 span{background:linear-gradient(90deg,#78a6ff,#c89aff);background-clip:text;color:transparent}
-.welcome p{color:var(--muted);font-size:14px;line-height:1.9;max-width:450px;margin:auto}
+.welcome p{color:var(--muted);font-size:14px;line-height:1.9;max-width:450px;margin:0 auto}
 .suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:20px}
 .suggestion{text-align:right;background:#11192b;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:14px}
 .suggestion strong{display:block;margin-bottom:5px}
@@ -82,10 +81,14 @@ footer{text-align:center;color:#6f7c96;font-size:11px;padding:14px 0}
   <div class="sidebar-top">
     <div class="brand">
       <div class="logo">N</div>
-      <div><h1>NEDAL AI</h1><p>مساعدك الذكي</p></div>
+      <div>
+        <h1>NEDAL AI</h1>
+        <p>نضال - مساعدك الذكي</p>
+      </div>
     </div>
     <button class="btn primary" id="newChat">＋ جديد</button>
   </div>
+
   <div class="side-title">📚 سجل المحادثات</div>
   <div class="history" id="history"></div>
   <button class="btn" id="clearHistory">🗑️ حذف كل المحادثات</button>
@@ -96,14 +99,26 @@ footer{text-align:center;color:#6f7c96;font-size:11px;padding:14px 0}
   <section class="welcome" id="welcome">
     <div class="orb">✦</div>
     <h2>أهلًا بك في <span>NEDAL AI</span></h2>
-    <p>اسأل وتعلّم واكتب واستكشف أفكارًا جديدة مع مساعدك الذكي.</p>
+    <p>أنا نضال، مساعدك الذكي. كيف يمكنني مساعدتك اليوم؟</p>
   </section>
 
   <section class="suggestions" id="suggestions">
-    <button class="suggestion" data-prompt="علّمني اللغة الألمانية للمبتدئين بالعربية"><strong>🌍 تعلّم الألمانية</strong><small>ابدأ من المستوى A1</small></button>
-    <button class="suggestion" data-prompt="ساعدني في كتابة رسالة رسمية باللغة الألمانية"><strong>✍️ كتابة النصوص</strong><small>رسائل ونصوص احترافية</small></button>
-    <button class="suggestion" data-prompt="اقترح لي أفكارًا لمشروع صغير بميزانية محدودة"><strong>💡 أفكار ومشاريع</strong><small>خطط عملية جديدة</small></button>
-    <button class="suggestion" data-prompt="اشرح لي الذكاء الاصطناعي بطريقة بسيطة"><strong>🧠 تعلّم واكتشف</strong><small>شرح مبسّط للمعلومات</small></button>
+    <button class="suggestion" data-prompt="علّمني اللغة الألمانية للمبتدئين بالعربية">
+      <strong>🌍 تعلّم الألمانية</strong>
+      <small>ابدأ من المستوى A1</small>
+    </button>
+    <button class="suggestion" data-prompt="ساعدني في كتابة رسالة رسمية باللغة الألمانية">
+      <strong>✍️ كتابة النصوص</strong>
+      <small>رسائل ونصوص احترافية</small>
+    </button>
+    <button class="suggestion" data-prompt="اقترح لي أفكارًا لمشروع صغير بميزانية محدودة">
+      <strong>💡 أفكار ومشاريع</strong>
+      <small>خطط عملية جديدة</small>
+    </button>
+    <button class="suggestion" data-prompt="اشرح لي الذكاء الاصطناعي بطريقة بسيطة">
+      <strong>🧠 تعلّم واكتشف</strong>
+      <small>شرح مبسّط للمعلومات</small>
+    </button>
   </section>
 
   <section class="chat" id="chat" aria-live="polite"></section>
@@ -116,7 +131,8 @@ footer{text-align:center;color:#6f7c96;font-size:11px;padding:14px 0}
     </div>
     <div class="hint">اضغط Enter للإرسال · Shift + Enter لسطر جديد</div>
   </section>
-  <footer>© 2026 NEDAL AI · مساعدك الذكي</footer>
+
+  <footer>© 2026 NEDAL AI · نضال، مساعدك الذكي</footer>
 </main>
 </div>
 
@@ -162,7 +178,12 @@ function currentConversation() {
 }
 
 function createConversation() {
-  const c = { id: makeId(), title: "محادثة جديدة", messages: [], updated: Date.now() };
+  const c = {
+    id: makeId(),
+    title: "محادثة جديدة",
+    messages: [],
+    updated: Date.now()
+  };
   conversations.unshift(c);
   currentId = c.id;
   saveConversations();
@@ -174,9 +195,11 @@ function createConversation() {
 function ensureConversation(text) {
   let c = currentConversation();
   if (!c) c = createConversation();
+
   if (!c.messages.length) {
     c.title = text.replace(/\s+/g, " ").slice(0, 34) || "محادثة جديدة";
   }
+
   c.updated = Date.now();
   return c;
 }
@@ -193,6 +216,7 @@ function renderHistory() {
     open.className = "history-open" + (c.id === currentId ? " active" : "");
     open.textContent = "💬 " + (c.title || "محادثة جديدة");
     open.title = c.title || "محادثة جديدة";
+
     open.addEventListener("click", () => {
       currentId = c.id;
       statusBox.textContent = "";
@@ -205,10 +229,14 @@ function renderHistory() {
     del.textContent = "×";
     del.title = "حذف هذه المحادثة";
     del.setAttribute("aria-label", "حذف المحادثة");
+
     del.addEventListener("click", () => {
       if (!confirm("هل تريد حذف هذه المحادثة؟")) return;
+
       conversations = conversations.filter(item => item.id !== c.id);
+
       if (currentId === c.id) currentId = null;
+
       saveConversations();
       renderHistory();
       renderConversation();
@@ -221,6 +249,7 @@ function renderHistory() {
 
 function renderConversation() {
   chat.replaceChildren();
+
   const c = currentConversation();
   const hasMessages = !!(c && c.messages.length);
 
@@ -241,7 +270,7 @@ function addMessageElement(text, role, scroll = true) {
   if (role !== "user") {
     const label = document.createElement("span");
     label.className = "label";
-    label.textContent = "✦ NEDAL AI";
+    label.textContent = "✦ نضال AI";
     box.appendChild(label);
   }
 
@@ -253,6 +282,7 @@ function addMessageElement(text, role, scroll = true) {
     const copy = document.createElement("button");
     copy.className = "copy";
     copy.textContent = "📋 نسخ الإجابة";
+
     copy.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(text);
@@ -261,43 +291,58 @@ function addMessageElement(text, role, scroll = true) {
         copy.textContent = "تعذّر النسخ";
       }
     });
+
     box.appendChild(copy);
   }
 
   chat.appendChild(box);
-  if (scroll) box.scrollIntoView({ behavior: "smooth", block: "end" });
+
+  if (scroll) {
+    box.scrollIntoView({ behavior: "smooth", block: "end" });
+  }
+
   return box;
 }
 
 function addSavedMessage(role, content) {
   const c = currentConversation();
   if (!c) return;
+
   c.messages.push({ role, content });
   c.updated = Date.now();
+
   saveConversations();
   renderHistory();
 }
 
 async function askAI() {
   if (busy) return;
+
   const message = input.value.trim();
   if (!message) return;
 
   const c = ensureConversation(message);
   currentId = c.id;
+
   addSavedMessage("user", message);
 
   busy = true;
   send.disabled = true;
   input.disabled = true;
   statusBox.textContent = "";
+
   welcome.classList.add("hidden");
   suggestions.classList.add("hidden");
+
   addMessageElement(message, "user");
+
   input.value = "";
   input.style.height = "43px";
 
-  const waiting = addMessageElement("لحظة من فضلك، أفكّر في إجابتك...", "assistant");
+  const waiting = addMessageElement(
+    "لحظة من فضلك، أفكّر في إجابتك...",
+    "assistant"
+  );
 
   try {
     const response = await fetch(API, {
@@ -307,7 +352,9 @@ async function askAI() {
     });
 
     const raw = await response.text();
+
     let data;
+
     try {
       data = JSON.parse(raw);
     } catch {
@@ -317,20 +364,28 @@ async function askAI() {
     if (!response.ok) {
       throw new Error(data.error || "خطأ في الخدمة: " + response.status);
     }
+
     if (!data.reply) {
       throw new Error(data.error || "لم تصل إجابة من الذكاء الاصطناعي.");
     }
 
     waiting.remove();
+
     addSavedMessage("assistant", data.reply);
     addMessageElement(data.reply, "assistant");
 
   } catch (error) {
     waiting.remove();
-    const msg = "تعذّر الحصول على إجابة. سبب الخطأ: " + (error.message || "خطأ غير معروف");
+
+    const msg = "تعذّر الحصول على إجابة. سبب الخطأ: " +
+      (error.message || "خطأ غير معروف");
+
     addSavedMessage("assistant", msg);
     addMessageElement(msg, "assistant");
-    statusBox.textContent = "تحقق من الإنترنت أو خدمة الذكاء الاصطناعي.";
+
+    statusBox.textContent =
+      "تحقق من الإنترنت أو خدمة الذكاء الاصطناعي.";
+
   } finally {
     busy = false;
     send.disabled = false;
@@ -350,6 +405,7 @@ function newChat() {
 }
 
 document.getElementById("newChat").addEventListener("click", newChat);
+
 document.getElementById("send").addEventListener("click", askAI);
 
 input.addEventListener("keydown", event => {
@@ -367,17 +423,23 @@ input.addEventListener("input", () => {
 suggestions.addEventListener("click", event => {
   const btn = event.target.closest("[data-prompt]");
   if (!btn) return;
+
   input.value = btn.dataset.prompt;
   askAI();
 });
 
 document.getElementById("clearHistory").addEventListener("click", () => {
-  if (!confirm("هل تريد حذف جميع المحادثات المحفوظة؟ لا يمكن التراجع عن هذا الإجراء.")) return;
+  if (!confirm("هل تريد حذف جميع المحادثات المحفوظة؟ لا يمكن التراجع عن هذا الإجراء.")) {
+    return;
+  }
+
   conversations = [];
   currentId = null;
+
   saveConversations();
   renderHistory();
   renderConversation();
+
   statusBox.textContent = "تم حذف المحادثات من هذا المتصفح.";
 });
 
