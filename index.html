@@ -1,381 +1,506 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090d19">
-<title>NEDAL AI - نضال</title>
+<title>NEDAL AI</title>
 <style>
-:root{color-scheme:dark;--bg:#090d19;--panel:#121a2c;--line:#293650;--text:#f4f6ff;--muted:#9aa9c4;--blue:#6685ff;--purple:#a36cff}
+:root{color-scheme:dark;--bg:#090d19;--panel:#121a2c;--line:#293650;--text:#f4f6ff;--muted:#9aa9c4;--blue:#6685ff}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at top,#20234a,transparent 45%),var(--bg);color:var(--text);font-family:system-ui,Arial,sans-serif}
-button,input,textarea,select{font:inherit}button{cursor:pointer}
-.layout{min-height:100dvh;max-width:1100px;margin:auto;display:flex}
-.sidebar{width:255px;flex-shrink:0;background:#0d1322;border-left:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:12px}
-.sidebar-top,.brand,.inputbox,.actions,.voice-settings{display:flex;align-items:center;gap:8px}
-.sidebar-top{justify-content:space-between}.brand{gap:10px}
-.logo{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,var(--blue),var(--purple));font-size:23px;font-weight:900}
-.brand h1{font-size:17px;margin:0}.brand p{color:var(--muted);font-size:11px;margin:4px 0 0}
-.btn,.copy,.speak{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px}
-.primary{background:linear-gradient(135deg,#5278ed,#8658d6);border:0}
-.side-title{color:var(--muted);font-size:12px}
-.auth-panel{display:flex;flex-direction:column;gap:8px;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
-.auth-panel input{width:100%;min-width:0;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px}
-.auth-actions{display:flex;gap:6px}.auth-actions button{flex:1;font-size:12px}
-.auth-status{font-size:11px;color:#b7c6e5;line-height:1.7;overflow-wrap:anywhere}
-.history{display:flex;flex-direction:column;gap:6px;overflow:auto;max-height:45vh}
-.history-item{display:flex;gap:4px;align-items:center}
-.history-open{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;background:transparent;color:#dce4fa;border:0;border-radius:8px;padding:10px 6px}
-.history-open.active,.history-open:hover{background:#202b43}
-.delete{color:#ffaaaa;background:transparent;border:0;padding:7px}
-.note{color:#7888a6;font-size:11px;line-height:1.8;margin-top:auto}
-.main{min-width:0;flex:1;display:flex;flex-direction:column;min-height:100dvh;padding:16px}
-.welcome{text-align:center;padding:36px 8px 22px}
-.orb{width:70px;height:70px;margin:auto auto 15px;display:grid;place-items:center;border-radius:23px;font-size:35px;background:linear-gradient(135deg,#2b4b96,#653d9c)}
-.welcome h2{font-size:clamp(24px,5vw,35px);margin:0 0 10px}
-.welcome h2 span{background:linear-gradient(90deg,#78a6ff,#c89aff);background-clip:text;color:transparent}
-.welcome p{color:var(--muted);font-size:14px;line-height:1.9}
-.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:18px}
-.suggestion{text-align:right;background:#11192b;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:13px}
-.suggestion strong{display:block;margin-bottom:5px}.suggestion small{color:var(--muted)}
-.chat{display:flex;flex-direction:column;gap:14px;flex:1;padding:8px 0 20px}
-.message{max-width:96%;padding:13px 15px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:16px}
-.user{align-self:flex-start;background:linear-gradient(135deg,#334d91,#49377b)}
-.assistant{align-self:stretch;background:#121a2b;border:1px solid var(--line)}
-.label{display:block;color:#aebfff;font-size:12px;font-weight:700;margin-bottom:6px}
-.actions{flex-wrap:wrap}.copy,.speak{color:var(--muted);font-size:12px;margin-top:10px;padding:7px 10px}
-.status{color:#c2d1ff;font-size:13px;padding:6px 0;line-height:1.8}
-.composer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 15%);padding:12px 0 6px}
-.inputbox{align-items:flex-end;background:#121a2b;border:1px solid #354463;border-radius:17px;padding:8px}
-textarea{flex:1;min-width:0;resize:none;max-height:140px;min-height:42px;border:0;outline:0;background:transparent;color:white;padding:10px;line-height:1.6}
-textarea::placeholder{color:#8291ac}
-.send,.mic,.voice-chat{width:43px;height:43px;flex-shrink:0;border:0;border-radius:13px;color:white;font-size:19px}
-.send{background:linear-gradient(135deg,var(--blue),var(--purple))}
-.mic{background:#263653}.voice-chat{background:linear-gradient(135deg,#3656a8,#7348ad)}
-.mic.recording,.voice-chat.active{background:#b92f54;animation:pulse 1.2s infinite}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Arial,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
 button:disabled{opacity:.5;cursor:not-allowed}
-@keyframes pulse{50%{box-shadow:0 0 0 5px #b92f5433}}
-.voice-settings{flex-wrap:wrap;margin-top:10px}
-.voice-settings label{font-size:12px;color:var(--muted)}
-.voice-settings select{background:#121a2b;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:7px}
-.hint{text-align:center;color:#7f8ba6;font-size:11px;padding-top:10px;line-height:1.8}
-footer{text-align:center;color:#6f7c96;font-size:11px;padding:14px 0}
+.page{max-width:850px;margin:auto;padding:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+h1,h2,p{margin-top:0}
+h1{font-size:25px;margin-bottom:6px}
+h2{font-size:18px}
+.muted{color:var(--muted);font-size:14px}
+input,textarea{width:100%;background:#090d19;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px;margin:6px 0 12px}
+button{border:1px solid var(--line);background:#202b43;color:white;padding:10px 14px;border-radius:10px}
+.primary{background:var(--blue);border:0;color:white}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row button{flex:1}
+#app{display:none}
+#history{display:flex;flex-direction:column;gap:7px}
+.history-item{display:flex;gap:6px}
+.history-item button:first-child{flex:1;text-align:right;overflow-wrap:anywhere}
+#messages{display:flex;flex-direction:column;gap:12px;min-height:150px}
+.message{padding:12px;border-radius:12px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7}
+.user{background:#24365b;align-self:flex-start;max-width:95%}
+.assistant{background:#1a2539;align-self:stretch}
+#status{white-space:pre-wrap;font-size:14px;color:#f5c875;margin-top:10px}
 .hidden{display:none!important}
-@media(max-width:650px){.layout{display:block}.sidebar{width:auto;border-left:0;border-bottom:1px solid var(--line);padding:10px}.sidebar-top .btn{font-size:12px;padding:8px}.history{flex-direction:row;max-height:none;overflow-x:auto}.history-item{min-width:140px;max-width:190px;background:#141d30;border-radius:9px}.history-open{font-size:12px}.note{display:none}.main{min-height:65vh;padding:11px}.welcome{padding:25px 5px 17px}.suggestion{padding:10px;font-size:12px}.suggestion small{font-size:10px}}
 </style>
 </head>
 <body>
-<div class="layout">
-<aside class="sidebar">
- <div class="sidebar-top">
-  <div class="brand"><div class="logo">N</div><div><h1>NEDAL AI</h1><p>نضال - مساعدك الذكي</p></div></div>
-  <button class="btn primary" id="newChat">＋ جديد</button>
- </div>
- <div class="auth-panel">
-  <strong>👤 حساب NEDAL AI</strong>
-  <div class="auth-status" id="authStatus">سجّل الدخول لمزامنة محادثاتك.</div>
-  <input id="authEmail" type="email" autocomplete="email" placeholder="البريد الإلكتروني">
-  <input id="authPassword" type="password" autocomplete="current-password" placeholder="كلمة المرور">
-  <div class="auth-actions"><button class="btn primary" id="signIn">دخول</button><button class="btn" id="signUp">إنشاء حساب</button></div>
-  <button class="btn hidden" id="signOut">تسجيل الخروج</button>
- </div>
- <div class="side-title">📚 سجل المحادثات</div>
- <div class="history" id="history"></div>
- <button class="btn" id="clearHistory">🗑️ حذف المحادثات المحلية</button>
- <div class="note">تُحفظ المحادثات على الجهاز، وتُزامَن مع حسابك عند تسجيل الدخول.</div>
-</aside>
-<main class="main">
- <section class="welcome" id="welcome"><div class="orb">✦</div><h2>أهلًا بك في <span>NEDAL AI</span></h2><p>أنا نضال، مساعدك الذكي. اكتب أو تحدث معي.</p></section>
- <section class="suggestions" id="suggestions">
-  <button class="suggestion" data-prompt="علّمني اللغة الألمانية للمبتدئين بالعربية"><strong>🌍 تعلّم الألمانية</strong><small>ابدأ من المستوى A1</small></button>
-  <button class="suggestion" data-prompt="ساعدني في كتابة رسالة رسمية باللغة الألمانية"><strong>✍️ كتابة النصوص</strong><small>رسائل احترافية</small></button>
-  <button class="suggestion" data-prompt="اقترح لي أفكارًا لمشروع صغير بميزانية محدودة"><strong>💡 أفكار ومشاريع</strong><small>خطط عملية</small></button>
-  <button class="suggestion" data-prompt="اشرح لي الذكاء الاصطناعي بطريقة بسيطة"><strong>🧠 تعلّم واكتشف</strong><small>معلومات مبسطة</small></button>
- </section>
- <section class="chat" id="chat" aria-live="polite"></section>
- <div class="status" id="status" role="status" aria-live="polite"></div>
- <section class="composer">
-  <div class="inputbox"><textarea id="message" rows="1" placeholder="اكتب رسالتك هنا..." aria-label="رسالتك"></textarea><button class="mic" id="mic" title="تحويل الكلام إلى نص">🎤</button><button class="voice-chat" id="voiceChat" title="المحادثة الصوتية">〰️</button><button class="send" id="send" aria-label="إرسال">➤</button></div>
-  <div class="voice-settings"><label for="speechLanguage">لغة التحدث:</label><select id="speechLanguage"><option value="ar-SA">العربية</option><option value="de-DE">الألمانية</option><option value="en-US">الإنجليزية</option></select><button class="btn" id="stopSpeech">⏹ إيقاف الصوت</button></div>
-  <div class="hint">🎤 تحويل الكلام إلى نص · 〰️ للمحادثة الصوتية</div>
- </section>
- <footer>© 2026 NEDAL AI · نضال، مساعدك الذكي</footer>
+<main class="page">
+  <header class="panel">
+    <h1>✦ NEDAL AI</h1>
+    <p class="muted">مساعدك الذكي باللغة العربية</p>
+  </header>
+
+  <section id="auth" class="panel">
+    <h2>تسجيل الدخول أو إنشاء حساب</h2>
+    <label for="email">البريد الإلكتروني</label>
+    <input id="email" type="email" autocomplete="email" placeholder="name@example.com">
+    <label for="password">كلمة المرور</label>
+    <input id="password" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور">
+    <div class="row">
+      <button class="primary" id="signup">إنشاء حساب</button>
+      <button id="login">تسجيل الدخول</button>
+    </div>
+    <p id="authStatus" class="muted"></p>
+  </section>
+
+  <section id="app">
+    <div class="panel">
+      <div class="row">
+        <button id="newChat" class="primary">＋ محادثة جديدة</button>
+        <button id="logout">تسجيل الخروج</button>
+      </div>
+      <p id="userLabel" class="muted"></p>
+    </div>
+
+    <div class="panel">
+      <h2>محادثاتي</h2>
+      <div id="history"></div>
+    </div>
+
+    <div class="panel">
+      <h2 id="chatTitle">محادثة جديدة</h2>
+      <div id="messages"></div>
+      <label for="prompt">اكتب رسالتك</label>
+      <textarea id="prompt" rows="3" placeholder="كيف يمكنني مساعدتك؟"></textarea>
+      <div class="row">
+        <button id="send" class="primary">إرسال</button>
+        <button id="clearChat">مسح المحادثة</button>
+      </div>
+      <p id="status"></p>
+    </div>
+  </section>
 </main>
-</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 "use strict";
-const API="https://little-king-48cf.nedaljadaan3.workers.dev";
-const SUPABASE_URL="https://kqonanuvfgddnrjjqesr.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY="sb_publishable_ضع_مفتاحك_هنا";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-const STORAGE_KEY="nedal_ai_conversations_v1";
-const $=id=>document.getElementById(id);
-const chat=$("chat"),input=$("message"),send=$("send"),mic=$("mic"),voiceChat=$("voiceChat"),statusBox=$("status"),welcome=$("welcome"),suggestions=$("suggestions"),historyBox=$("history"),speechLanguage=$("speechLanguage");
-const authStatus=$("authStatus"),authEmail=$("authEmail"),authPassword=$("authPassword"),signInButton=$("signIn"),signUpButton=$("signUp"),signOutButton=$("signOut");
-let conversations=loadConversations(),currentId=null,busy=false,recognition=null,recording=false,voiceChatActive=false,voiceSession=0,listenTimer=null,currentUser=null,cloudLoading=false;
 
-function loadConversations(){try{const x=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");return Array.isArray(x)?x:[]}catch{return[]}}
-function saveConversations(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(conversations))}catch{statusBox.textContent="تعذّر حفظ المحادثات في هذا المتصفح."}}
-function makeId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
-function currentConversation(){return conversations.find(c=>c.id===currentId)}
-function setAuthStatus(t){authStatus.textContent=t}
+/* إعدادات مشروعك */
+const SUPABASE_URL = "https://kqonanuvfgddnrjjqesr.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "ضع_مفتاح_sb_publishable_الصحيح_هنا";
+const AI_API = "https://little-king-48cf.nedaljadaan3.workers.dev";
+const STORAGE_KEY = "nedal_ai_conversations_v1";
 
-function createConversation(){const c={id:makeId(),dbId:null,syncedCount:0,title:"محادثة جديدة",messages:[],updated:Date.now()};conversations.unshift(c);currentId=c.id;saveConversations();renderHistory();renderConversation();return c}
-function ensureConversation(t){let c=currentConversation();if(!c)c=createConversation();if(!c.messages.length)c.title=t.replace(/\s+/g," ").slice(0,34)||"محادثة جديدة";c.updated=Date.now();return c}
+const $ = id => document.getElementById(id);
+const authBox = $("auth");
+const appBox = $("app");
+let supabaseClient = null;
+let currentUser = null;
+let conversations = [];
+let activeId = null;
+let busy = false;
 
-function renderHistory(){
- historyBox.replaceChildren();
- [...conversations].sort((a,b)=>(b.updated||0)-(a.updated||0)).forEach(c=>{
-  const row=document.createElement("div");row.className="history-item";
-  const open=document.createElement("button");open.className="history-open"+(c.id===currentId?" active":"");open.textContent="💬 "+(c.title||"محادثة جديدة");
-  open.onclick=()=>{currentId=c.id;statusBox.textContent="";renderHistory();renderConversation()};
-  const del=document.createElement("button");del.className="delete";del.textContent="×";del.title="حذف المحادثة";
-  del.onclick=()=>deleteConversation(c);
-  row.append(open,del);historyBox.append(row);
- });
+function showAuth(message="") {
+  authBox.style.display = "block";
+  appBox.style.display = "none";
+  $("authStatus").textContent = message;
 }
 
-async function deleteConversation(c){
- if(!confirm("هل تريد حذف هذه المحادثة؟"))return;
- conversations=conversations.filter(x=>x.id!==c.id);
- if(currentId===c.id)currentId=null;
- saveConversations();renderHistory();renderConversation();
- if(currentUser&&c.dbId){
-  try{const {error}=await db.from("conversations").delete().eq("id",c.dbId).eq("user_id",currentUser.id);if(error)throw error}
-  catch(e){setAuthStatus("حُذفت محليًا لكن تعذّر حذف النسخة السحابية: "+e.message)}
- }
+function showApp() {
+  authBox.style.display = "none";
+  appBox.style.display = "block";
+  $("userLabel").textContent = currentUser?.email || "";
 }
 
-function renderConversation(){
- chat.replaceChildren();const c=currentConversation(),has=!!(c&&c.messages.length);
- welcome.classList.toggle("hidden",has);suggestions.classList.toggle("hidden",has);
- if(c)c.messages.forEach(m=>addMessageElement(m.content,m.role,false));
+function status(message) {
+  $("status").textContent = message;
 }
 
-function addMessageElement(text,role,scroll=true){
- const box=document.createElement("div");box.className="message "+(role==="user"?"user":"assistant");
- if(role!=="user"){const label=document.createElement("span");label.className="label";label.textContent="✦ NEDAL AI";box.append(label)}
- const content=document.createElement("div");content.textContent=text;box.append(content);
- if(role!=="user"){
-  const actions=document.createElement("div");actions.className="actions";
-  const copy=document.createElement("button");copy.className="copy";copy.textContent="📋 نسخ الإجابة";
-  copy.onclick=async()=>{try{await navigator.clipboard.writeText(text);copy.textContent="تم النسخ ✓"}catch{copy.textContent="تعذّر النسخ"}};
-  const speak=document.createElement("button");speak.className="speak";speak.textContent="🔊 استمع للإجابة";speak.onclick=()=>speakText(text,false);
-  actions.append(copy,speak);box.append(actions);
- }
- chat.append(box);if(scroll)box.scrollIntoView({behavior:"smooth",block:"end"});return box;
+function escapeError(error) {
+  return error?.message || String(error || "حدث خطأ غير معروف");
 }
 
-function detectLanguage(t){if(/[\u0600-\u06FF]/.test(t))return"ar-SA";if(/[äöüßÄÖÜ]/i.test(t))return"de-DE";return speechLanguage.value==="en-US"?"en-US":"en-US"}
-function speakText(text,continuous=false){
- if(!("speechSynthesis"in window)){statusBox.textContent="متصفحك لا يدعم قراءة النص بصوت.";if(continuous)scheduleListening();return}
- speechSynthesis.cancel();const session=voiceSession,u=new SpeechSynthesisUtterance(text);u.lang=detectLanguage(text);
- u.onstart=()=>statusBox.textContent="🔊 نضال يتحدث الآن...";
- u.onerror=e=>{if(!["canceled","interrupted"].includes(e.error))statusBox.textContent="تعذّرت قراءة الإجابة."};
- u.onend=()=>{if(continuous&&voiceChatActive&&session===voiceSession)scheduleListening();else if(!voiceChatActive)statusBox.textContent=""};
- speechSynthesis.speak(u);
-}
-function scheduleListening(){clearTimeout(listenTimer);if(!voiceChatActive)return;const s=voiceSession;statusBox.textContent="🎤 استعد للتحدث...";listenTimer=setTimeout(()=>{if(voiceChatActive&&s===voiceSession&&!busy&&!recording)startVoiceInput(true)},600)}
-
-async function signIn(){
- const email=authEmail.value.trim(),password=authPassword.value;
- if(!email||!password){setAuthStatus("أدخل البريد الإلكتروني وكلمة المرور.");return}
- signInButton.disabled=signUpButton.disabled=true;setAuthStatus("جارٍ تسجيل الدخول...");
- try{const {error}=await db.auth.signInWithPassword({email,password});if(error)throw error;setAuthStatus("تم تسجيل الدخول.")}
- catch(e){setAuthStatus("تعذّر الدخول: "+e.message)}
- finally{signInButton.disabled=signUpButton.disabled=false}
-}
-async function signUp(){
- const email=authEmail.value.trim(),password=authPassword.value;
- if(!email||!password){setAuthStatus("أدخل البريد الإلكتروني وكلمة المرور.");return}
- if(password.length<6){setAuthStatus("اجعل كلمة المرور 6 أحرف على الأقل.");return}
- signInButton.disabled=signUpButton.disabled=true;setAuthStatus("جارٍ إنشاء الحساب...");
- try{const {data,error}=await db.auth.signUp({email,password});if(error)throw error;setAuthStatus(data.session?"تم إنشاء الحساب.":"تحقق من بريدك الإلكتروني لتأكيد الحساب، ثم سجّل الدخول.")}
- catch(e){setAuthStatus("تعذّر إنشاء الحساب: "+e.message)}
- finally{signInButton.disabled=signUpButton.disabled=false}
-}
-async function signOut(){const {error}=await db.auth.signOut();if(error)setAuthStatus("تعذّر تسجيل الخروج: "+error.message)}
-signInButton.onclick=signIn;signUpButton.onclick=signUp;signOutButton.onclick=signOut;
-
-function updateAuthUI(user){
- const changed=(currentUser?.id||null)!==(user?.id||null);currentUser=user||null;
- [authEmail,authPassword,signInButton,signUpButton].forEach(el=>el.classList.toggle("hidden",!!currentUser));
- signOutButton.classList.toggle("hidden",!currentUser);
- if(currentUser){setAuthStatus("تم الدخول. جارٍ تحميل سجل المحادثات...");if(changed)loadCloudConversations()}
- else setAuthStatus("سجّل الدخول لمزامنة محادثاتك.");
-}
-db.auth.getSession().then(({data,error})=>{if(error)setAuthStatus("تعذّر التحقق من الحساب.");updateAuthUI(data?.session?.user||null)});
-db.auth.onAuthStateChange((_event,session)=>updateAuthUI(session?.user||null));
-
-async function syncConversationToCloud(c){
- if(!currentUser||!c||c.syncing)return;
- c.syncing=true;
- try{
-  if(!c.dbId){
-   const {data,error}=await db.from("conversations").insert({user_id:currentUser.id,title:c.title||"محادثة جديدة"}).select("id").single();
-   if(error)throw error;c.dbId=data.id;c.syncedCount=0;
+function loadLocal() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
   }
-  const pending=c.messages.slice(c.syncedCount||0);
-  if(pending.length){
-   const rows=pending.map(m=>({conversation_id:c.dbId,user_id:currentUser.id,role:m.role,content:m.content}));
-   const {error}=await db.from("messages").insert(rows);if(error)throw error;
-   c.syncedCount=c.messages.length;
-  }
-  const {error}=await db.from("conversations").update({title:c.title||"محادثة جديدة",updated_at:new Date().toISOString()}).eq("id",c.dbId).eq("user_id",currentUser.id);
-  if(error)throw error;saveConversations();setAuthStatus("تم حفظ المحادثة في حسابك.");
- }catch(e){setAuthStatus("الحفظ المحلي يعمل، لكن المزامنة فشلت: "+e.message)}
- finally{c.syncing=false}
-}
-async function loadCloudConversations(){
- if(!currentUser||cloudLoading)return;
- cloudLoading=true;
- try{
-  const uid=currentUser.id;
-  const {data:rows,error}=await db.from("conversations").select("id,title,created_at,updated_at").eq("user_id",uid).order("updated_at",{ascending:false});
-  if(error)throw error;
-  for(const r of rows||[]){
-   const {data:msgs,error:me}=await db.from("messages").select("role,content,created_at").eq("conversation_id",r.id).eq("user_id",uid).order("created_at",{ascending:true});
-   if(me)throw me;
-   const old=conversations.find(x=>x.dbId===r.id);
-   const c={id:old?.id||r.id,dbId:r.id,syncedCount:(msgs||[]).length,title:r.title||"محادثة جديدة",messages:(msgs||[]).map(m=>({role:m.role,content:m.content})),updated:Date.parse(r.updated_at||r.created_at)||Date.now()};
-   if(old){Object.assign(old,c)}else conversations.push(c);
-  }
-  saveConversations();renderHistory();renderConversation();
-  setAuthStatus("تم تحميل سجل المحادثات.");
-  for(const c of conversations.filter(x=>!x.dbId))await syncConversationToCloud(c);
- }catch(e){setAuthStatus("تعذّر تحميل المحادثات: "+e.message)}
- finally{cloudLoading=false}
 }
 
-function addSavedMessage(role,content){
- const c=currentConversation();if(!c)return;
- c.messages.push({role,content});c.updated=Date.now();
- saveConversations();renderHistory();
- if(currentUser)syncConversationToCloud(c);
+function saveLocal() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
+  } catch {
+    status("تعذر الحفظ المحلي في المتصفح.");
+  }
 }
 
-async function askAI(){
- if(busy)return;
- const message=input.value.trim();if(!message)return;
- if(recording&&recognition){try{recognition.stop()}catch{}}
- const c=ensureConversation(message);currentId=c.id;
- addSavedMessage("user",message);addMessageElement(message,"user");
- input.value="";input.style.height="43px";
- busy=true;send.disabled=mic.disabled=voiceChat.disabled=input.disabled=true;
- welcome.classList.add("hidden");suggestions.classList.add("hidden");
- statusBox.textContent=voiceChatActive?"لحظة، أجهّز الرد...":"";
- const waiting=addMessageElement("لحظة من فضلك، أفكّر في إجابتك...","assistant");
- try{
-  const history=c.messages.slice(-12).map(m=>({role:m.role,content:m.content}));
-  const response=await fetch(API,{
-   method:"POST",
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({message,history})
+function makeId() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  return "c-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+}
+
+function newConversation() {
+  const c = {
+    id: makeId(),
+    title: "محادثة جديدة",
+    messages: [],
+    created_at: new Date().toISOString()
+  };
+  conversations.unshift(c);
+  activeId = c.id;
+  saveLocal();
+  renderAll();
+}
+
+function activeConversation() {
+  return conversations.find(c => c.id === activeId);
+}
+
+function renderHistory() {
+  const box = $("history");
+  box.replaceChildren();
+
+  if (!conversations.length) {
+    const p = document.createElement("p");
+    p.className = "muted";
+    p.textContent = "لا توجد محادثات بعد.";
+    box.appendChild(p);
+    return;
+  }
+
+  conversations.forEach(c => {
+    const line = document.createElement("div");
+    line.className = "history-item";
+
+    const open = document.createElement("button");
+    open.textContent = c.title || "محادثة جديدة";
+    open.onclick = () => {
+      activeId = c.id;
+      renderAll();
+    };
+
+    const del = document.createElement("button");
+    del.textContent = "حذف";
+    del.onclick = () => {
+      if (!confirm("هل تريد حذف هذه المحادثة؟")) return;
+      conversations = conversations.filter(x => x.id !== c.id);
+      if (activeId === c.id) activeId = conversations[0]?.id || null;
+      saveLocal();
+      renderAll();
+    };
+
+    line.append(open, del);
+    box.appendChild(line);
   });
-  const raw=await response.text();let data;
-  try{data=JSON.parse(raw)}catch{throw new Error("وصل رد غير مفهوم من الخدمة.")}
-  if(!response.ok)throw new Error(data.error||"خطأ في الخدمة: "+response.status);
-  if(!data.reply)throw new Error(data.error||"لم تصل إجابة من الذكاء الاصطناعي.");
-  waiting.remove();
-  addSavedMessage("assistant",data.reply);
-  addMessageElement(data.reply,"assistant");
-  if(voiceChatActive)speakText(data.reply,true);
-  else statusBox.textContent="";
- }catch(e){
-  waiting.remove();
-  const msg="تعذّر الحصول على إجابة. السبب: "+(e.message||"خطأ غير معروف");
-  addSavedMessage("assistant",msg);addMessageElement(msg,"assistant");
-  statusBox.textContent="تحقق من الإنترنت أو خدمة الذكاء الاصطناعي.";
-  if(voiceChatActive)scheduleListening();
- }finally{
-  busy=false;send.disabled=mic.disabled=voiceChat.disabled=input.disabled=false;
+}
+
+function renderMessages() {
+  const box = $("messages");
+  box.replaceChildren();
+  const c = activeConversation();
+
+  $("chatTitle").textContent = c?.title || "محادثة جديدة";
+
+  if (!c || !c.messages.length) {
+    const p = document.createElement("p");
+    p.className = "muted";
+    p.textContent = "ابدأ محادثة جديدة بكتابة رسالتك.";
+    box.appendChild(p);
+    return;
+  }
+
+  c.messages.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "message " +
+      (m.role === "user" ? "user" : "assistant");
+    div.textContent = m.content;
+    box.appendChild(div);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+function renderAll() {
   renderHistory();
- }
+  renderMessages();
 }
 
-function startVoiceInput(){
- const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){statusBox.textContent="التعرّف على الصوت غير مدعوم. جرّب Google Chrome.";return}
- if(recording&&recognition){try{recognition.stop()}catch{}return}
- try{
-  const rec=new SR();recognition=rec;rec.lang=speechLanguage.value;rec.continuous=false;rec.interimResults=true;
-  let finalText="",gotFinal=false;
-  rec.onstart=()=>{recording=true;mic.classList.add("recording");mic.textContent="⏹";statusBox.textContent="🎤 أنا أستمع إليك... تحدث الآن."};
-  rec.onresult=e=>{
-   let interim="";
-   for(let i=e.resultIndex;i<e.results.length;i++){
-    const r=e.results[i];
-    if(r.isFinal){finalText+=r[0].transcript+" ";gotFinal=true}
-    else interim+=r[0].transcript;
-   }
-   input.value=(finalText+interim).trim();
-   input.style.height="43px";input.style.height=Math.min(input.scrollHeight,140)+"px";
-  };
-  rec.onerror=e=>{
-   const errors={"not-allowed":"اسمح للمتصفح باستخدام الميكروفون.","no-speech":"لم أسمع كلامًا. حاول مجددًا.","network":"تعذّر الاتصال بخدمة التعرف على الصوت."};
-   statusBox.textContent=errors[e.error]||"حدث خطأ في الميكروفون: "+e.error;
-  };
-  rec.onend=()=>{
-   recording=false;mic.classList.remove("recording");mic.textContent="🎤";
-   if(recognition===rec)recognition=null;
-   const t=input.value.trim();
-   if(voiceChatActive&&t&&!busy&&gotFinal){askAI();return}
-   if(voiceChatActive&&!t){scheduleListening();return}
-   if(t)statusBox.textContent="تم تحويل الكلام إلى نص. راجعه ثم اضغط إرسال.";
-  };
-  rec.start();
- }catch{recording=false;mic.classList.remove("recording");mic.textContent="🎤";statusBox.textContent="تعذّر تشغيل الميكروفون."}
+function setupSupabase() {
+  if (!window.supabase?.createClient) {
+    throw new Error("تعذر تحميل مكتبة Supabase. تحقق من اتصال الإنترنت.");
+  }
+  if (
+    !SUPABASE_PUBLISHABLE_KEY ||
+    SUPABASE_PUBLISHABLE_KEY.includes("ضع_مفتاح")
+  ) {
+    throw new Error("لم تضع مفتاح Supabase الصحيح داخل الكود.");
+  }
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 }
 
-function stopVoiceChat(){
- voiceChatActive=false;voiceSession++;clearTimeout(listenTimer);
- voiceChat.classList.remove("active");voiceChat.textContent="〰️";
- if(recognition&&recording){try{recognition.stop()}catch{}}
- if("speechSynthesis"in window)speechSynthesis.cancel();
- statusBox.textContent="تم إيقاف المحادثة الصوتية.";
-}
-voiceChat.onclick=()=>{
- if(voiceChatActive){stopVoiceChat();return}
- voiceChatActive=true;voiceSession++;
- voiceChat.classList.add("active");voiceChat.textContent="⏹";
- if("speechSynthesis"in window)speechSynthesis.cancel();
- startVoiceInput();
-};
+async function signUp() {
+  try {
+    setupSupabase();
+    const email = $("email").value.trim();
+    const password = $("password").value;
+    if (!email || !password) {
+      $("authStatus").textContent = "أدخل البريد الإلكتروني وكلمة المرور.";
+      return;
+    }
+    $("authStatus").textContent = "جارٍ إنشاء الحساب...";
+    const {data, error} = await supabaseClient.auth.signUp({
+      email, password
+    });
+    if (error) throw error;
 
-function newChat(){
- stopVoiceChat();
- if(recording&&recognition){try{recognition.stop()}catch{}}
- if("speechSynthesis"in window)speechSynthesis.cancel();
- currentId=null;statusBox.textContent="";input.value="";
- renderConversation();renderHistory();input.focus();
+    if (!data.session) {
+      $("authStatus").textContent =
+        "تم إرسال طلب التسجيل. تحقق من بريدك الإلكتروني لتأكيد الحساب.";
+      return;
+    }
+    currentUser = data.user;
+    await startApp();
+  } catch (e) {
+    $("authStatus").textContent = "تعذر إنشاء الحساب: " + escapeError(e);
+  }
 }
-$("newChat").onclick=newChat;
-send.onclick=askAI;
-mic.onclick=()=>startVoiceInput();
-$("stopSpeech").onclick=()=>{
- if("speechSynthesis"in window)speechSynthesis.cancel();
- statusBox.textContent="تم إيقاف الصوت.";
-};
-input.addEventListener("keydown",e=>{
- if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();askAI()}
+
+async function signIn() {
+  try {
+    setupSupabase();
+    const email = $("email").value.trim();
+    const password = $("password").value;
+    if (!email || !password) {
+      $("authStatus").textContent = "أدخل البريد الإلكتروني وكلمة المرور.";
+      return;
+    }
+    $("authStatus").textContent = "جارٍ تسجيل الدخول...";
+    const {data, error} = await supabaseClient.auth.signInWithPassword({
+      email, password
+    });
+    if (error) throw error;
+    currentUser = data.user;
+    await startApp();
+  } catch (e) {
+    $("authStatus").textContent = "تعذر تسجيل الدخول: " + escapeError(e);
+  }
+}
+
+async function startApp() {
+  showApp();
+  conversations = loadLocal();
+  activeId = conversations[0]?.id || null;
+  if (!activeId) newConversation();
+  renderAll();
+  await loadCloudConversations();
+}
+
+async function loadCloudConversations() {
+  if (!supabaseClient || !currentUser) return;
+  try {
+    const {data: rows, error} = await supabaseClient
+      .from("conversations")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .order("created_at", {ascending: false});
+
+    if (error) throw error;
+    if (!rows?.length) return;
+
+    const cloud = [];
+    for (const row of rows) {
+      const {data: msgs, error: msgError} = await supabaseClient
+        .from("messages")
+        .select("*")
+        .eq("conversation_id", row.id)
+        .order("created_at", {ascending: true});
+
+      if (msgError) throw msgError;
+      cloud.push({
+        id: row.id,
+        title: row.title || "محادثة جديدة",
+        created_at: row.created_at,
+        messages: (msgs || []).map(m => ({
+          role: m.role,
+          content: m.content
+        }))
+      });
+    }
+
+    // لا تستبدل محادثة محلية تحمل رسائل غير محفوظة.
+    for (const c of cloud) {
+      const index = conversations.findIndex(x => x.id === c.id);
+      if (index < 0) conversations.push(c);
+      else if (!conversations[index].messages?.length) conversations[index] = c;
+    }
+
+    saveLocal();
+    if (!activeId || !conversations.some(c => c.id === activeId)) {
+      activeId = conversations[0]?.id || null;
+    }
+    renderAll();
+  } catch (e) {
+    status("تعذر تحميل المحادثات السحابية: " + escapeError(e));
+  }
+}
+
+async function saveConversationToCloud(c) {
+  if (!supabaseClient || !currentUser || !c) return;
+  try {
+    const {error: convError} = await supabaseClient
+      .from("conversations")
+      .upsert({
+        id: c.id,
+        user_id: currentUser.id,
+        title: c.title || "محادثة جديدة"
+      }, {onConflict: "id"});
+
+    if (convError) throw convError;
+
+    // يستخدم هذا الإصدار الرسائل الجديدة فقط عند إرسالها.
+    // لا يحذف الرسائل الموجودة في قاعدة البيانات.
+    if (c._pendingMessages?.length) {
+      const rows = c._pendingMessages.map(m => ({
+        conversation_id: c.id,
+        user_id: currentUser.id,
+        role: m.role,
+        content: m.content
+      }));
+
+      const {error: msgError} = await supabaseClient
+        .from("messages")
+        .insert(rows);
+
+      if (msgError) throw msgError;
+      c._pendingMessages = [];
+    }
+  } catch (e) {
+    status("تم الحفظ محليًا، لكن المزامنة السحابية لم تنجح: " +
+      escapeError(e));
+  }
+}
+
+async function sendMessage() {
+  if (busy) return;
+  const text = $("prompt").value.trim();
+  if (!text) return;
+
+  if (!activeConversation()) newConversation();
+  const c = activeConversation();
+  if (!c) return;
+
+  busy = true;
+  $("send").disabled = true;
+  $("prompt").value = "";
+  status("جارٍ إرسال الرسالة...");
+
+  const userMessage = {role: "user", content: text};
+  c.messages.push(userMessage);
+  c._pendingMessages = c._pendingMessages || [];
+  c._pendingMessages.push(userMessage);
+
+  if (c.title === "محادثة جديدة") {
+    c.title = text.slice(0, 45);
+  }
+  saveLocal();
+  renderAll();
+
+  try {
+    await saveConversationToCloud(c);
+
+    const history = c.messages.map(m => ({
+      role: m.role,
+      content: m.content
+    }));
+
+    const response = await fetch(AI_API, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({message: text, history})
+    });
+
+    const raw = await response.text();
+    if (!response.ok) {
+      throw new Error("خادم الذكاء الاصطناعي: HTTP " + response.status);
+    }
+
+    let answer = raw;
+    try {
+      const data = JSON.parse(raw);
+      answer = data.reply || data.answer || data.response ||
+        data.message || raw;
+    } catch {}
+
+    const botMessage = {role: "assistant", content: String(answer)};
+    c.messages.push(botMessage);
+    c._pendingMessages = c._pendingMessages || [];
+    c._pendingMessages.push(botMessage);
+
+    saveLocal();
+    renderAll();
+    await saveConversationToCloud(c);
+    status("تم الرد.");
+  } catch (e) {
+    status("تعذر الحصول على الرد: " + escapeError(e));
+    saveLocal();
+  } finally {
+    busy = false;
+    $("send").disabled = false;
+  }
+}
+
+$("signup").addEventListener("click", signUp);
+$("login").addEventListener("click", signIn);
+$("send").addEventListener("click", sendMessage);
+
+$("prompt").addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
 });
-input.addEventListener("input",()=>{
- input.style.height="43px";
- input.style.height=Math.min(input.scrollHeight,140)+"px";
-});
-suggestions.onclick=e=>{
- const b=e.target.closest("[data-prompt]");
- if(b){input.value=b.dataset.prompt;askAI()}
-};
-$("clearHistory").onclick=()=>{
- if(!confirm("حذف جميع المحادثات من هذا الجهاز؟"))return;
- conversations=[];currentId=null;saveConversations();
- renderHistory();renderConversation();
- statusBox.textContent="تم حذف السجل المحلي. قد تبقى النسخ السحابية في حسابك.";
-};
 
-renderHistory();renderConversation();
+$("newChat").addEventListener("click", newConversation);
+
+$("clearChat").addEventListener("click", () => {
+  const c = activeConversation();
+  if (!c) return;
+  if (!confirm("هل تريد مسح رسائل هذه المحادثة؟")) return;
+  c.messages = [];
+  c._pendingMessages = [];
+  saveLocal();
+  renderAll();
+});
+
+$("logout").addEventListener("click", async () => {
+  if (supabaseClient) await supabaseClient.auth.signOut();
+  currentUser = null;
+  showAuth("تم تسجيل الخروج.");
+});
+
+(async function init() {
+  try {
+    setupSupabase();
+    const {data, error} = await supabaseClient.auth.getSession();
+    if (error) throw error;
+    if (data.session) {
+      currentUser = data.session.user;
+      await startApp();
+    } else {
+      showAuth();
+    }
+  } catch (e) {
+    showAuth("إعداد الاتصال يحتاج إلى مراجعة: " + escapeError(e));
+  }
+})();
 </script>
 </body>
 </html>
