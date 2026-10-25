@@ -2,900 +2,619 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#090d19">
-<title>NEDAL AI</title>
-<style>
-:root {
-  color-scheme: dark;
-  --bg: #0b1020;
-  --panel: #111a2e;
-  --line: #263550;
-  --text: #edf3ff;
-  --muted: #9baac4;
-  --blue: #2563eb;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <title>NEDAL AI - مساعدك الذكي</title>
 
-* {
-  box-sizing: border-box;
-}
+  <style>
+    * { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, system-ui, sans-serif;
-}
+    :root {
+      --bg: #0b1020;
+      --panel: #111a2e;
+      --panel2: #17233b;
+      --text: #edf2ff;
+      --muted: #9aa9c4;
+      --accent: #7c83ff;
+      --border: #293650;
+    }
 
-button, input, textarea {
-  font: inherit;
-}
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+    }
 
-button {
-  cursor: pointer;
-  color: var(--text);
-  background: #383838;
-  border: 1px solid #505050;
-  border-radius: 10px;
-  padding: 11px 14px;
-  min-height: 42px;
-}
+    button, textarea { font: inherit; }
 
-button:hover {
-  background: #454545;
-}
+    button {
+      cursor: pointer;
+      color: var(--text);
+    }
 
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
 
-.page {
-  width: 100%;
-  max-width: 1400px;
-  margin: auto;
-  padding: 12px 20px 24px;
-}
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
-.panel {
-  background: transparent;
-  border: 0;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 10px;
-  box-shadow: none;
-}
+    .brand {
+      font-size: 25px;
+      font-weight: bold;
+      color: #a5a8ff;
+      padding: 8px 2px;
+    }
 
-header.panel {
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-  background: var(--bg);
-}
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: normal;
+      margin-top: 7px;
+    }
 
-h1 {
-  font-size: 22px;
-  margin: 0 0 6px;
-}
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      border-radius: 12px;
+      padding: 12px;
+      width: 100%;
+      text-align: right;
+    }
 
-h2 {
-  font-size: 17px;
-  margin: 0 0 14px;
-}
+    .btn.primary {
+      background: var(--accent);
+      color: white;
+      border-color: transparent;
+      text-align: center;
+      font-weight: bold;
+    }
 
-p {
-  margin-top: 0;
-}
+    .history-title {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 10px;
+    }
 
-.muted {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.7;
-}
+    #history {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      overflow-y: auto;
+    }
 
-input, textarea {
-  display: block;
-  width: 100%;
-  background: #212121;
-  color: var(--text);
-  border: 1px solid #505050;
-  border-radius: 12px;
-  padding: 13px;
-  margin: 8px 0 14px;
-  outline: none;
-}
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
 
-input:focus, textarea:focus {
-  border-color: #888;
-}
+    .history-open {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: right;
+      border: 0;
+      background: transparent;
+      padding: 10px 5px;
+      border-radius: 8px;
+    }
 
-textarea {
-  resize: vertical;
-  line-height: 1.7;
-}
+    .history-open.active,
+    .history-open:hover {
+      background: var(--panel2);
+    }
 
-.primary {
-  background: var(--blue);
-  border-color: var(--blue);
-  color: white;
-}
+    .delete-btn {
+      background: transparent;
+      border: 0;
+      color: #ff9292;
+      padding: 8px;
+    }
 
-.primary:hover {
-  background: #0e906f;
-}
+    .sidebar-note {
+      margin-top: auto;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
 
-.row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+    .main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-.row button {
-  flex: 1;
-}
+    .topbar {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-#auth {
-  max-width: 480px;
-  margin: 40px auto;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-}
+    .topbar strong { font-size: 18px; }
 
-#app {
-  display: none;
-}
+    .menu-btn {
+      display: none;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 8px 12px;
+    }
 
-#app[style*="display: block"] {
-  display: grid !important;
-  grid-template-columns: 260px minmax(0, 1fr);
-  grid-template-rows: auto minmax(400px, 1fr);
-  gap: 12px;
-  align-items: start;
-}
+    #messages {
+      flex: 1;
+      width: 100%;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 25px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-#app > .panel:first-child {
-  grid-column: 1 / -1;
-  grid-row: 1;
-  border-bottom: 1px solid var(--line);
-}
+    .welcome {
+      margin: auto 0;
+      text-align: center;
+      padding: 35px 10px;
+    }
 
-#app > .panel:nth-child(2) {
-  grid-column: 1;
-  grid-row: 2;
-  background: #181818;
-  border-radius: 14px;
-  min-height: 400px;
-}
+    .welcome .logo {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
 
-#app > .panel:nth-child(3) {
-  grid-column: 2;
-  grid-row: 2;
-  min-width: 0;
-  max-width: 850px;
-  width: 100%;
-  margin: 0 auto;
-}
+    .welcome h1 {
+      font-size: 29px;
+      margin: 10px 0;
+    }
 
-#history {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+    .welcome p {
+      color: var(--muted);
+      line-height: 1.9;
+    }
 
-.history-item {
-  display: flex;
-  gap: 5px;
-}
+    .message {
+      max-width: 90%;
+      line-height: 1.9;
+      overflow-wrap: anywhere;
+    }
 
-.history-item button:first-child {
-  flex: 1;
-  min-width: 0;
-  text-align: right;
-  overflow-wrap: anywhere;
-  background: transparent;
-  border-color: transparent;
-}
+    .message.user {
+      align-self: flex-start;
+      background: #253453;
+      padding: 12px 16px;
+      border-radius: 16px 16px 4px 16px;
+      white-space: pre-wrap;
+    }
 
-.history-item button:last-child {
-  padding: 8px;
-}
-#messages {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-height: 250px;
-  max-height: 60vh;
-  overflow-y: auto;
-  padding: 20px 8px;
-  margin-bottom: 18px;
-  scroll-behavior: smooth;
-}
+    .message.assistant {
+      align-self: stretch;
+      padding: 4px 3px;
+      white-space: pre-wrap;
+    }
 
-.message {
-  padding: 14px 18px;
-  border-radius: 18px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  line-height: 1.9;
-  border: 1px solid #263550;
-}
+    .message-label {
+      display: block;
+      color: #a5a8ff;
+      font-size: 12px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
 
-.user {
-  background: #1b2b49;
-  border-color: #304b78;
-  align-self: flex-start;
-  max-width: 90%;
-}
+    .composer-wrap {
+      padding: 12px 16px 18px;
+      width: 100%;
+      max-width: 850px;
+      margin: 0 auto;
+    }
 
-.assistant {
-  background: #111a2e;
-  align-self: stretch;
-}
+    .composer {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 10px;
+    }
 
-#prompt {
-  min-height: 110px;
-  background: #111a2e;
-  border: 1px solid #304362;
-  border-radius: 16px;
-  padding: 16px;
-  line-height: 1.8;
-}
+    #prompt {
+      flex: 1;
+      min-width: 0;
+      max-height: 160px;
+      resize: vertical;
+      border: 0;
+      outline: 0;
+      color: var(--text);
+      background: transparent;
+      padding: 10px;
+      line-height: 1.7;
+    }
 
-#prompt:focus {
-  border-color: #2563eb;
-  outline: 1px solid #2563eb;
-}
+    #prompt::placeholder { color: var(--muted); }
 
-@media (max-width: 700px) {
-  #messages {
-    max-height: 50vh;
-    padding: 14px 4px;
-  }
+    #send {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
 
-  #prompt {
-    min-height: 90px;
-  }
-}
-#status {
-  white-space: pre-wrap;
-  color: #f5cf7b;
-  font-size: 14px;
-  line-height: 1.7;
-  margin-top: 10px;
-}
+    #send:disabled {
+      opacity: .5;
+      cursor: wait;
+    }
 
-label {
-  display: block;
-  color: #d4d4d4;
-  font-size: 14px;
-}
+    .notice {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+      margin-top: 9px;
+    }
 
-.hidden {
-  display: none !important;
-}
+    @media (max-width: 700px) {
+      .sidebar {
+        position: fixed;
+        z-index: 10;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        transform: translateX(105%);
+        transition: transform .2s;
+        box-shadow: none;
+      }
 
-@media (max-width: 700px) {
-  .page {
-    padding: 8px;
-  }
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: -10px 0 35px #0008;
+      }
 
-  header.panel {
-    padding: 12px;
-  }
-
-  #app[style*="display: block"] {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto;
-    gap: 4px;
-  }
-
-  #app > .panel:first-child {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  #app > .panel:nth-child(2) {
-    grid-column: 1;
-    grid-row: 2;
-    min-height: auto;
-    max-height: 220px;
-    overflow-y: auto;
-  }
-
-  #app > .panel:nth-child(3) {
-    grid-column: 1;
-    grid-row: 3;
-    padding: 10px 4px;
-  }
-
-  #messages {
-    max-height: 45vh;
-  }
-
-  .panel {
-    padding: 12px;
-  }
-}
-</style>
+      .menu-btn { display: block; }
+      .topbar { padding: 13px; }
+      #messages { padding: 20px 14px; }
+      .welcome h1 { font-size: 25px; }
+      .message { max-width: 96%; }
+      .composer-wrap { padding: 10px; }
+    }
+  </style>
 </head>
+
 <body>
-<main class="page">
-  <header class="panel">
-    <h1>✦ NEDAL AI</h1>
-    <p class="muted">أهلًا بك في NEDAL AI — مساعدك الذكي. كيف يمكنني مساعدتك اليوم؟</p>
-  </header>
+<div class="app">
 
-  <section id="auth" class="panel">
-    <h2>تسجيل الدخول أو إنشاء حساب</h2>
-    <label for="email">البريد الإلكتروني</label>
-    <input id="email" type="email" autocomplete="email" placeholder="name@example.com">
-    <label for="password">كلمة المرور</label>
-    <input id="password" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور">
-    <div class="row">
-      <button class="primary" id="signup">إنشاء حساب</button>
-      <button id="login">تسجيل الدخول</button>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      NEDAL AI
+      <small>مساعدك الرقمي</small>
     </div>
-    <p id="authStatus" class="muted"></p>
-  </section>
 
-  <section id="app">
-    <div class="panel">
-      <div class="row">
-        <button id="newChat" class="primary">＋ محادثة جديدة</button>
-        <button id="logout">تسجيل الخروج</button>
+    <button class="btn primary" id="newChat">
+      ＋ محادثة جديدة
+    </button>
+
+    <div class="history-title">سجل المحادثات المحفوظة</div>
+    <div id="history"></div>
+
+    <div class="sidebar-note">
+      تُحفظ محادثاتك على هذا المتصفح فقط.
+      لا تمسح بيانات المتصفح إذا أردت الاحتفاظ بها.
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="فتح القائمة">
+        ☰
+      </button>
+      <strong>NEDAL AI</strong>
+      <span style="color:var(--muted);font-size:12px">
+        مساعدك الذكي
+      </span>
+    </header>
+
+    <section id="messages" aria-live="polite"></section>
+
+    <div class="composer-wrap">
+      <form class="composer" id="chatForm">
+        <textarea id="prompt" rows="1"
+          placeholder="اكتب رسالتك هنا..."
+          aria-label="رسالتك"></textarea>
+        <button id="send" type="submit" aria-label="إرسال">➤</button>
+      </form>
+      <div class="notice">
+        يمكنك الكتابة باللغة العربية أو الألمانية.
+        هذه النسخة تحتاج إلى ربط خدمة ذكاء اصطناعي للحصول على إجابات حقيقية.
       </div>
-      <p id="userLabel" class="muted"></p>
     </div>
-
-    <div class="panel">
-      <h2>محادثاتي</h2>
-      <div id="history"></div>
-    </div>
-
-    <div class="panel">
-      <h2 id="chatTitle">محادثة جديدة</h2>
-      <div id="messages"></div>
-      <label for="prompt">اكتب رسالتك</label>
-      <textarea id="prompt" rows="3" placeholder="كيف يمكنني مساعدتك؟"></textarea>
-      <div class="row">
-  <button id="send" class="primary">إرسال</button>
-  <button id="generateImage">🎨 إنشاء صورة</button>
-  <button id="clearChat">مسح المحادثة</button>
+  </main>
 </div>
 
-<div id="imageResult" style="margin-top:16px"></div>
-<p id="status"></p>
-    </div>
-  </section>
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-"use strict";
+(() => {
+  "use strict";
 
-/* إعدادات مشروعك */
-const SUPABASE_URL = "https://kqonanuvfgddnrjjqesr.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_hueVbdQ1oxY5qhUAYhaVig_5JS-ENjO";
-const AI_API = "https://little-king-48cf.nedaljadaan3.workers.dev";
-const STORAGE_KEY = "nedal_ai_conversations_v1";
+  const STORAGE_KEY = "nedal_ai_conversations_v1";
 
-const $ = id => document.getElementById(id);
-const authBox = $("auth");
-const appBox = $("app");
-let supabaseClient = null;
-let currentUser = null;
-let conversations = [];
-let activeId = null;
-let busy = false;
+  const messagesEl = document.getElementById("messages");
+  const historyEl = document.getElementById("history");
+  const promptEl = document.getElementById("prompt");
+  const formEl = document.getElementById("chatForm");
+  const sendBtn = document.getElementById("send");
+  const sidebar = document.getElementById("sidebar");
 
-function showAuth(message="") {
-  authBox.style.display = "block";
-  appBox.style.display = "none";
-  $("authStatus").textContent = message;
-}
+  let conversations = [];
+  let currentId = null;
+  let busy = false;
 
-function showApp() {
-  authBox.style.display = "none";
-  appBox.style.display = "block";
-  $("userLabel").textContent = currentUser?.email || "";
-}
-
-function status(message) {
-  $("status").textContent = message;
-}
-
-function escapeError(error) {
-  return error?.message || String(error || "حدث خطأ غير معروف");
-}
-
-function loadLocal() {
-  try {
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveLocal() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
-  } catch {
-    status("تعذر الحفظ المحلي في المتصفح.");
-  }
-}
-
-function makeId() {
-  if (crypto.randomUUID) return crypto.randomUUID();
-  return "c-" + Date.now() + "-" + Math.random().toString(16).slice(2);
-}
-
-function newConversation() {
-  const c = {
-    id: makeId(),
-    title: "محادثة جديدة",
-    messages: [],
-    created_at: new Date().toISOString()
-  };
-  conversations.unshift(c);
-  activeId = c.id;
-  saveLocal();
-  renderAll();
-}
-
-function activeConversation() {
-  return conversations.find(c => c.id === activeId);
-}
-
-function renderHistory() {
-  const box = $("history");
-  box.replaceChildren();
-
-  if (!conversations.length) {
-    const p = document.createElement("p");
-    p.className = "muted";
-    p.textContent = "لا توجد محادثات بعد.";
-    box.appendChild(p);
-    return;
+  function makeId() {
+    return Date.now().toString(36) +
+      Math.random().toString(36).slice(2, 9);
   }
 
-  conversations.forEach(c => {
-    const line = document.createElement("div");
-    line.className = "history-item";
-
-    const open = document.createElement("button");
-    open.textContent = c.title || "محادثة جديدة";
-    open.onclick = () => {
-      activeId = c.id;
-      renderAll();
-    };
-
-    const del = document.createElement("button");
-    const rename = document.createElement("button");
-rename.textContent = "تسمية";
-rename.title = "تغيير اسم المحادثة";
-
-rename.onclick = async () => {
-  const proposed = prompt(
-    "اكتب اسمًا جديدًا للمحادثة:",
-    c.title || ""
-  );
-
-  if (proposed === null) return;
-
-  const title = proposed.trim().slice(0, 60);
-
-  if (!title) {
-    alert("اكتب اسمًا للمحادثة أولًا.");
-    return;
-  }
-
-  c.title = title;
-  saveLocal();
-  renderAll();
-  await saveConversationToCloud(c);
-  status("تم تحديث اسم المحادثة.");
-};
-    del.textContent = "حذف";
-    del.onclick = () => {
-      const rename = document.createElement("button");
-rename.textContent = "تسمية";
-rename.title = "تغيير اسم المحادثة";
-
-rename.onclick = async () => {
-  const proposed = prompt(
-    "اكتب اسمًا جديدًا للمحادثة:",
-    c.title || ""
-  );
-
-  if (proposed === null) return;
-
-  const title = proposed.trim().slice(0, 60);
-
-  if (!title) {
-    alert("اكتب اسمًا للمحادثة أولًا.");
-    return;
-  }
-
-  c.title = title;
-  saveLocal();
-  renderAll();
-  await saveConversationToCloud(c);
-  status("تم تحديث اسم المحادثة.");
-};
-      conversations = conversations.filter(x => x.id !== c.id);
-      if (activeId === c.id) activeId = conversations[0]?.id || null;
-      saveLocal();
-      renderAll();
-    };
-
-    line.append(open, rename, del);
-    box.appendChild(line);
-  });
-}
-
-function renderMessages() {
-  const box = $("messages");
-  box.replaceChildren();
-  const c = activeConversation();
-
-  $("chatTitle").textContent = c?.title || "محادثة جديدة";
-
-  if (!c || !c.messages.length) {
-    const p = document.createElement("p");
-    p.className = "muted";
-    p.textContent = "ابدأ محادثة جديدة بكتابة رسالتك.";
-    box.appendChild(p);
-    return;
-  }
-
-  c.messages.forEach(m => {
-    const div = document.createElement("div");
-    div.className = "message " +
-      (m.role === "user" ? "user" : "assistant");
-    div.textContent = m.content;
-    box.appendChild(div);
-  });
-  box.scrollTop = box.scrollHeight;
-}
-
-function renderAll() {
-  renderHistory();
-  renderMessages();
-}
-
-function setupSupabase() {
-  if (!window.supabase?.createClient) {
-    throw new Error("تعذر تحميل مكتبة Supabase. تحقق من اتصال الإنترنت.");
-  }
-  if (
-    !SUPABASE_PUBLISHABLE_KEY ||
-    SUPABASE_PUBLISHABLE_KEY.includes("ضع_مفتاح")
-  ) {
-    throw new Error("لم تضع مفتاح Supabase الصحيح داخل الكود.");
-  }
-  supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
-}
-
-async function signUp() {
-  try {
-    setupSupabase();
-    const email = $("email").value.trim();
-    const password = $("password").value;
-    if (!email || !password) {
-      $("authStatus").textContent = "أدخل البريد الإلكتروني وكلمة المرور.";
-      return;
-    }
-    $("authStatus").textContent = "جارٍ إنشاء الحساب...";
-    const {data, error} = await supabaseClient.auth.signUp({
-      email, password
-    });
-    if (error) throw error;
-
-    if (!data.session) {
-      $("authStatus").textContent =
-        "تم إرسال طلب التسجيل. تحقق من بريدك الإلكتروني لتأكيد الحساب.";
-      return;
-    }
-    currentUser = data.user;
-    await startApp();
-  } catch (e) {
-    $("authStatus").textContent = "تعذر إنشاء الحساب: " + escapeError(e);
-  }
-}
-
-async function signIn() {
-  try {
-    setupSupabase();
-    const email = $("email").value.trim();
-    const password = $("password").value;
-    if (!email || !password) {
-      $("authStatus").textContent = "أدخل البريد الإلكتروني وكلمة المرور.";
-      return;
-    }
-    $("authStatus").textContent = "جارٍ تسجيل الدخول...";
-    const {data, error} = await supabaseClient.auth.signInWithPassword({
-      email, password
-    });
-    if (error) throw error;
-    currentUser = data.user;
-    await startApp();
-  } catch (e) {
-    $("authStatus").textContent = "تعذر تسجيل الدخول: " + escapeError(e);
-  }
-}
-
-async function startApp() {
-  showApp();
-  conversations = loadLocal();
-  activeId = conversations[0]?.id || null;
-  if (!activeId) newConversation();
-  renderAll();
-  await loadCloudConversations();
-}
-
-async function loadCloudConversations() {
-  if (!supabaseClient || !currentUser) return;
-  try {
-    const {data: rows, error} = await supabaseClient
-      .from("conversations")
-      .select("*")
-      .eq("user_id", currentUser.id)
-      .order("created_at", {ascending: false});
-
-    if (error) throw error;
-    if (!rows?.length) return;
-
-    const cloud = [];
-    for (const row of rows) {
-      const {data: msgs, error: msgError} = await supabaseClient
-        .from("messages")
-        .select("*")
-        .eq("conversation_id", row.id)
-        .order("created_at", {ascending: true});
-
-      if (msgError) throw msgError;
-      cloud.push({
-        id: row.id,
-        title: row.title || "محادثة جديدة",
-        created_at: row.created_at,
-        messages: (msgs || []).map(m => ({
-          role: m.role,
-          content: m.content
-        }))
-      });
-    }
-
-    // لا تستبدل محادثة محلية تحمل رسائل غير محفوظة.
-    for (const c of cloud) {
-      const index = conversations.findIndex(x => x.id === c.id);
-      if (index < 0) conversations.push(c);
-      else if (!conversations[index].messages?.length) conversations[index] = c;
-    }
-
-    saveLocal();
-    if (!activeId || !conversations.some(c => c.id === activeId)) {
-      activeId = conversations[0]?.id || null;
-    }
-    renderAll();
-  } catch (e) {
-    status("تعذر تحميل المحادثات السحابية: " + escapeError(e));
-  }
-}
-
-async function saveConversationToCloud(c) {
-  if (!supabaseClient || !currentUser || !c) return;
-  try {
-    const {error: convError} = await supabaseClient
-      .from("conversations")
-      .upsert({
-        id: c.id,
-        user_id: currentUser.id,
-        title: c.title || "محادثة جديدة"
-      }, {onConflict: "id"});
-
-    if (convError) throw convError;
-
-    // يستخدم هذا الإصدار الرسائل الجديدة فقط عند إرسالها.
-    // لا يحذف الرسائل الموجودة في قاعدة البيانات.
-    if (c._pendingMessages?.length) {
-      const rows = c._pendingMessages.map(m => ({
-        conversation_id: c.id,
-        user_id: currentUser.id,
-        role: m.role,
-        content: m.content
-      }));
-
-      const {error: msgError} = await supabaseClient
-        .from("messages")
-        .insert(rows);
-
-      if (msgError) throw msgError;
-      c._pendingMessages = [];
-    }
-  } catch (e) {
-    status("تم الحفظ محليًا، لكن المزامنة السحابية لم تنجح: " +
-      escapeError(e));
-  }
-}
-
-async function sendMessage() {
-  if (busy) return;
-  const text = $("prompt").value.trim();
-  if (!text) return;
-
-  if (!activeConversation()) newConversation();
-  const c = activeConversation();
-  if (!c) return;
-
-  busy = true;
-  $("send").disabled = true;
-  $("prompt").value = "";
-  status("جارٍ إرسال الرسالة...");
-
-  const userMessage = {role: "user", content: text};
-  c.messages.push(userMessage);
-  c._pendingMessages = c._pendingMessages || [];
-  c._pendingMessages.push(userMessage);
-
-  if (c.title === "محادثة جديدة") {
-    c.title = text.slice(0, 45);
-  }
-  saveLocal();
-  renderAll();
-
-  try {
-    await saveConversationToCloud(c);
-
-    const history = c.messages.map(m => ({
-      role: m.role,
-      content: m.content
-    }));
-
-    const response = await fetch(AI_API, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({message: text, history})
-    });
-
-    const raw = await response.text();
-    if (!response.ok) {
-      throw new Error("خادم الذكاء الاصطناعي: HTTP " + response.status);
-    }
-
-    let answer = raw;
+  function loadData() {
     try {
-      const data = JSON.parse(raw);
-      answer = data.reply || data.answer || data.response ||
-        data.message || raw;
-    } catch {}
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
 
-    const botMessage = {role: "assistant", content: String(answer)};
-    c.messages.push(botMessage);
-    c._pendingMessages = c._pendingMessages || [];
-    c._pendingMessages.push(botMessage);
+      if (Array.isArray(parsed)) {
+        conversations = parsed.filter(c =>
+          c && typeof c.id === "string" &&
+          Array.isArray(c.messages)
+        );
+      }
+    } catch (error) {
+      conversations = [];
+    }
+  }
 
-    saveLocal();
+  function saveData() {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(conversations)
+      );
+      return true;
+    } catch (error) {
+      alert("تعذر حفظ المحادثات. تحقق من مساحة المتصفح.");
+      return false;
+    }
+  }
+
+  function currentConversation() {
+    return conversations.find(c => c.id === currentId);
+  }
+
+  function createConversation() {
+    const conversation = {
+      id: makeId(),
+      title: "محادثة جديدة",
+      updatedAt: Date.now(),
+      messages: []
+    };
+
+    conversations.unshift(conversation);
+    currentId = conversation.id;
+    saveData();
     renderAll();
-    await saveConversationToCloud(c);
-    status("تم الرد.");
-  } catch (e) {
-    status("تعذر الحصول على الرد: " + escapeError(e));
-    saveLocal();
-  } finally {
-    busy = false;
-    $("send").disabled = false;
-  }
-}
-
-$("signup").addEventListener("click", signUp);
-$("login").addEventListener("click", signIn);
-
-$("generateImage").addEventListener("click", async () => {
-  const prompt = $("prompt").value.trim();
-
-  if (!prompt) {
-    status("اكتب وصف الصورة أولاً.");
-    return;
+    sidebar.classList.remove("open");
+    promptEl.focus();
   }
 
-  const button = $("generateImage");
-  const resultBox = $("imageResult");
+  function escapeText(value) {
+    return String(value);
+  }
 
-  button.disabled = true;
-  resultBox.replaceChildren();
-  status("جارٍ إنشاء الصورة، انتظر قليلًا...");
+  function renderMessages() {
+    messagesEl.replaceChildren();
+    const conversation = currentConversation();
 
-  try {
-    const response = await fetch(AI_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "generate_image",
-        prompt
-      })
+    if (!conversation || conversation.messages.length === 0) {
+      const welcome = document.createElement("div");
+      welcome.className = "welcome";
+
+      const logo = document.createElement("div");
+      logo.className = "logo";
+      logo.textContent = "✦";
+
+      const heading = document.createElement("h1");
+      heading.textContent = "أهلًا بك في NEDAL AI";
+
+      const description = document.createElement("p");
+      description.textContent =
+        "كيف يمكنني مساعدتك اليوم؟ اكتب سؤالك للبدء.";
+
+      welcome.append(logo, heading, description);
+      messagesEl.append(welcome);
+      return;
+    }
+
+    conversation.messages.forEach(message => {
+      const bubble = document.createElement("div");
+      bubble.className = "message " +
+        (message.role === "user" ? "user" : "assistant");
+
+      if (message.role !== "user") {
+        const label = document.createElement("span");
+        label.className = "message-label";
+        label.textContent = "NEDAL AI";
+        bubble.append(label);
+      }
+
+      const content = document.createElement("div");
+      content.textContent = escapeText(message.content);
+      bubble.append(content);
+      messagesEl.append(bubble);
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "تعذر إنشاء الصورة.");
-    }
-
-    if (!data.image) {
-      throw new Error("لم تصل الصورة من الخادم.");
-    }
-
-    const image = document.createElement("img");
-    image.src = data.image;
-    image.alt = prompt;
-    image.style.width = "100%";
-    image.style.maxWidth = "600px";
-    image.style.borderRadius = "14px";
-    image.style.display = "block";
-
-    const download = document.createElement("a");
-    download.href = data.image;
-    download.download = "nedal-ai-image.jpg";
-    download.textContent = "⬇️ حفظ الصورة";
-    download.style.display = "inline-block";
-    download.style.marginTop = "12px";
-    download.style.color = "#93c5fd";
-
-    resultBox.append(image, download);
-    status("تم إنشاء الصورة.");
-  } catch (error) {
-    status("تعذر إنشاء الصورة: " + (error.message || error));
-  } finally {
-    button.disabled = false;
+    messagesEl.scrollTop = messagesEl.scrollHeight;
   }
-});
 
+  function renderHistory() {
+    historyEl.replaceChildren();
 
-$("prompt").addEventListener("keydown", e => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
+    conversations.forEach(conversation => {
+      const row = document.createElement("div");
+      row.className = "history-item";
+
+      const open = document.createElement("button");
+      open.className = "history-open" +
+        (conversation.id === currentId ? " active" : "");
+      open.textContent = conversation.title || "محادثة جديدة";
+      open.title = conversation.title || "محادثة جديدة";
+
+      open.addEventListener("click", () => {
+        currentId = conversation.id;
+        renderAll();
+        sidebar.classList.remove("open");
+      });
+
+      const remove = document.createElement("button");
+      remove.className = "delete-btn";
+      remove.textContent = "×";
+      remove.title = "حذف المحادثة";
+      remove.setAttribute("aria-label", "حذف المحادثة");
+
+      remove.addEventListener("click", () => {
+        if (!confirm("هل تريد حذف هذه المحادثة نهائيًا؟")) return;
+
+        conversations = conversations.filter(
+          c => c.id !== conversation.id
+        );
+
+        if (currentId === conversation.id) {
+          currentId = conversations.length
+            ? conversations[0].id : null;
+        }
+
+        saveData();
+        if (!currentId) {
+          createConversation();
+        } else {
+          renderAll();
+        }
+      });
+
+      row.append(open, remove);
+      historyEl.append(row);
+    });
   }
-});
 
-$("newChat").addEventListener("click", newConversation);
+  function renderAll() {
+    renderHistory();
+    renderMessages();
+  }
 
-$("clearChat").addEventListener("click", () => {
-  const c = activeConversation();
-  if (!c) return;
-  if (!confirm("هل تريد مسح رسائل هذه المحادثة؟")) return;
-  c.messages = [];
-  c._pendingMessages = [];
-  saveLocal();
-  renderAll();
-});
+  async function getAssistantReply() {
+    // الواجهة تعمل محليًا، لكن لا توجد خدمة AI مرتبطة بعد.
+    // يمكن لاحقًا ربط هذا الموضع بخادم آمن عبر API.
+    return "وصلت رسالتك بنجاح، وتم حفظها في سجل المحادثات. " +
+      "لكن خدمة الذكاء الاصطناعي الحقيقية غير مرتبطة بعد. " +
+      "الخطوة التالية هي ربط NEDAL AI بخدمة ذكاء اصطناعي " +
+      "عبر خادم آمن حتى أستطيع الإجابة عن أسئلتك.";
+  }
 
-$("logout").addEventListener("click", async () => {
-  if (supabaseClient) await supabaseClient.auth.signOut();
-  currentUser = null;
-  showAuth("تم تسجيل الخروج.");
-});
+  async function sendMessage(text) {
+    if (busy || !text.trim()) return;
 
-(async function init() {
-  try {
-    setupSupabase();
-    const {data, error} = await supabaseClient.auth.getSession();
-    if (error) throw error;
-    if (data.session) {
-      currentUser = data.session.user;
-      await startApp();
-    } else {
-      showAuth();
+    if (!currentConversation()) {
+      createConversation();
     }
-  } catch (e) {
-    showAuth("إعداد الاتصال يحتاج إلى مراجعة: " + escapeError(e));
+
+    const conversation = currentConversation();
+    if (!conversation) return;
+
+    busy = true;
+    sendBtn.disabled = true;
+
+    conversation.messages.push({
+      role: "user",
+      content: text.trim()
+    });
+
+    if (conversation.title === "محادثة جديدة") {
+      conversation.title = text.trim().slice(0, 38);
+    }
+
+    conversation.updatedAt = Date.now();
+    saveData();
+    renderAll();
+
+    promptEl.value = "";
+
+    try {
+      const reply = await getAssistantReply();
+
+      conversation.messages.push({
+        role: "assistant",
+        content: reply
+      });
+
+      conversation.updatedAt = Date.now();
+      saveData();
+    } catch (error) {
+      conversation.messages.push({
+        role: "assistant",
+        content: "حدث خطأ. حاول مرة أخرى."
+      });
+      saveData();
+    } finally {
+      busy = false;
+      sendBtn.disabled = false;
+      renderAll();
+      promptEl.focus();
+    }
+  }
+
+  formEl.addEventListener("submit", event => {
+    event.preventDefault();
+    sendMessage(promptEl.value);
+  });
+
+  promptEl.addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      formEl.requestSubmit();
+    }
+  });
+
+  document.getElementById("newChat")
+    .addEventListener("click", createConversation);
+
+  document.getElementById("menuBtn")
+    .addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+    });
+
+  loadData();
+
+  if (conversations.length > 0) {
+    currentId = conversations[0].id;
+    renderAll();
+  } else {
+    createConversation();
   }
 })();
 </script>
