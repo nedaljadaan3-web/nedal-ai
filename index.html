@@ -796,7 +796,67 @@ async function sendMessage() {
 
 $("signup").addEventListener("click", signUp);
 $("login").addEventListener("click", signIn);
-$("send").addEventListener("click", sendMessage);
+
+$("generateImage").addEventListener("click", async () => {
+  const prompt = $("prompt").value.trim();
+
+  if (!prompt) {
+    status("اكتب وصف الصورة أولاً.");
+    return;
+  }
+
+  const button = $("generateImage");
+  const resultBox = $("imageResult");
+
+  button.disabled = true;
+  resultBox.replaceChildren();
+  status("جارٍ إنشاء الصورة، انتظر قليلًا...");
+
+  try {
+    const response = await fetch(AI_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "generate_image",
+        prompt
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "تعذر إنشاء الصورة.");
+    }
+
+    if (!data.image) {
+      throw new Error("لم تصل الصورة من الخادم.");
+    }
+
+    const image = document.createElement("img");
+    image.src = data.image;
+    image.alt = prompt;
+    image.style.width = "100%";
+    image.style.maxWidth = "600px";
+    image.style.borderRadius = "14px";
+    image.style.display = "block";
+
+    const download = document.createElement("a");
+    download.href = data.image;
+    download.download = "nedal-ai-image.jpg";
+    download.textContent = "⬇️ حفظ الصورة";
+    download.style.display = "inline-block";
+    download.style.marginTop = "12px";
+    download.style.color = "#93c5fd";
+
+    resultBox.append(image, download);
+    status("تم إنشاء الصورة.");
+  } catch (error) {
+    status("تعذر إنشاء الصورة: " + (error.message || error));
+  } finally {
+    button.disabled = false;
+  }
+});
+
 
 $("prompt").addEventListener("keydown", e => {
   if (e.key === "Enter" && !e.shiftKey) {
