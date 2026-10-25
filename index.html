@@ -476,7 +476,31 @@ rename.onclick = async () => {
 };
     del.textContent = "حذف";
     del.onclick = () => {
-      if (!confirm("هل تريد حذف هذه المحادثة؟")) return;
+      const rename = document.createElement("button");
+rename.textContent = "تسمية";
+rename.title = "تغيير اسم المحادثة";
+
+rename.onclick = async () => {
+  const proposed = prompt(
+    "اكتب اسمًا جديدًا للمحادثة:",
+    c.title || ""
+  );
+
+  if (proposed === null) return;
+
+  const title = proposed.trim().slice(0, 60);
+
+  if (!title) {
+    alert("اكتب اسمًا للمحادثة أولًا.");
+    return;
+  }
+
+  c.title = title;
+  saveLocal();
+  renderAll();
+  await saveConversationToCloud(c);
+  status("تم تحديث اسم المحادثة.");
+};
       conversations = conversations.filter(x => x.id !== c.id);
       if (activeId === c.id) activeId = conversations[0]?.id || null;
       saveLocal();
