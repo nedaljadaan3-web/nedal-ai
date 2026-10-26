@@ -9,10 +9,11 @@ app.use(cors());
 app.use(express.json({ limit: "20kb" }));
 
 // عرض واجهة NEDAL AI الرئيسية
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
-
+ 
 // استقبال الرسائل والرد عليها
 app.post("/api/chat", async (req, res) => {
   const message = req.body?.message;
