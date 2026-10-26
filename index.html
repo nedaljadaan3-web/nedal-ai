@@ -538,18 +538,21 @@
       body: JSON.stringify({ message })
     }
   );
+const data = await response.json();  
+    
+if (!response.ok) {
+  throw new Error(
+    data.error || "خطأ من الخادم: " + response.status
+  );
+}
 
-  if (!response.ok) {
-    throw new Error("تعذر الاتصال بالخادم");
-  }
+if (!data.reply) {
+  throw new Error(data.error || "لم يصل رد من الخادم");
+}
 
-  const data = await response.json();
+return data.reply;
 
-  if (!data.reply) {
-    throw new Error("لم يصل رد من الخادم");
-  }
-
-  return data.reply;
+  
   }
     async function sendMessage(text) {
     if (busy || !text.trim()) return;
@@ -592,7 +595,7 @@
     } catch (error) {
       conversation.messages.push({
         role: "assistant",
-        content: "حدث خطأ. حاول مرة أخرى."
+       content: "خطأ: " + error.message
       });
       saveData();
     } finally {
