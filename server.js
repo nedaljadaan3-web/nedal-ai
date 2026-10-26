@@ -1,15 +1,19 @@
+
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json({ limit: "20kb" }));
 
+// عرض واجهة NEDAL AI الرئيسية
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
+// استقبال الرسائل والرد عليها
 app.post("/api/chat", async (req, res) => {
   const message = req.body?.message;
 
@@ -19,7 +23,9 @@ app.post("/api/chat", async (req, res) => {
     });
   }
 
-  if (!process.env.OPENAI_API_KEY) {
+  const apiKey = process.env.OPENAI_API_KEY;
+
+  if (!apiKey) {
     return res.status(500).json({
       error: "مفتاح الذكاء الاصطناعي غير موجود في الخادم."
     });
@@ -32,8 +38,7 @@ app.post("/api/chat", async (req, res) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization":
-            `Bearer ${process.env.OPENAI_API_KEY}`
+          "Authorization": `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           model: "gpt-4o-mini",
@@ -49,9 +54,9 @@ app.post("/api/chat", async (req, res) => {
 
     if (!response.ok) {
       console.error("OpenAI API error:", data);
+
       return res.status(502).json({
-        error:
-          "تعذر الحصول على الإجابة. تحقق من إعدادات API والرصيد."
+        error: "تعذر الحصول على الإجابة. تحقق من إعدادات API والرصيد."
       });
     }
 
@@ -69,16 +74,20 @@ app.post("/api/chat", async (req, res) => {
     }
 
     return res.json({ reply });
+
   } catch (error) {
     console.error("Chat error:", error);
+
     return res.status(500).json({
       error: "حدث خطأ أثناء الاتصال بالخدمة."
     });
   }
 });
 
+// تشغيل الخادم
 const port = process.env.PORT || 3000;
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`NEDAL AI server listening on port ${port}`);
 });
+
