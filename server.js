@@ -7,10 +7,7 @@ app.use(cors());
 app.use(express.json({ limit: "20kb" }));
 
 app.get("/", (req, res) => {
-  res.json({
-    name: "NEDAL AI",
-    status: "running"
-  });
+  res.sendFile(__dirname + "/index.html");
 });
 
 app.post("/api/chat", async (req, res) => {
