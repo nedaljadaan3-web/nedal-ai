@@ -1,38 +1,83 @@
 const express = require("express");
 const cors = require("cors");
+
 const app = express();
+
 app.use(cors());
 app.use(express.json({ limit: "20kb" }));
 
 app.get("/", (req, res) => {
   res.json({
     name: "NEDAL AI",
-    status: "running",
-    message: "NEDAL AI server is ready"
+    status: "running"
   });
 });
 
 app.post("/api/chat", async (req, res) => {
-  const message = req.body && req.body.message;
+  const message = req.body?.message;
 
   if (typeof message !== "string" || !message.trim()) {
     return res.status(400).json({
-      error: "Please enter a message."
+      error: "اكتب رسالتك أولًا."
     });
   }
 
-  if (message.length > 10000) {
-    return res.status(413).json({
-      error: "Message is too long."
+  if (!process.env.OPENAI_API_KEY) {
+    return res.status(500).json({
+      error: "مفتاح الذكاء الاصطناعي غير موجود في الخادم."
     });
   }
 
-  // AI integration will be added after deployment.
-  return res.json({
-    reply:
-      "وصلت رسالتك إلى خادم NEDAL AI بنجاح! " +
-      "بقي ربط خدمة الذكاء الاصطناعي للحصول على إجابات حقيقية."
-  });
+  try {
+    const response = await fetch(
+      "https://api.openai.com/v1/responses",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization":
+            `Bearer ${process.env.OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          instructions:
+            "أنت NEDAL AI، مساعد ذكي. أجب بلغة المستخدم، واستخدم العربية عندما يكتب بالعربية.",
+          input: message.trim(),
+          max_output_tokens: 700
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("OpenAI API error:", data);
+      return res.status(502).json({
+        error:
+          "تعذر الحصول على الإجابة. تحقق من إعدادات API والرصيد."
+      });
+    }
+
+    const reply = (data.output || [])
+      .flatMap(item => item.content || [])
+      .filter(item => item.type === "output_text")
+      .map(item => item.text || "")
+      .join("\n")
+      .trim();
+
+    if (!reply) {
+      return res.status(502).json({
+        error: "لم تصل إجابة من الذكاء الاصطناعي."
+      });
+    }
+
+    return res.json({ reply });
+  } catch (error) {
+    console.error("Chat error:", error);
+    return res.status(500).json({
+      error: "حدث خطأ أثناء الاتصال بالخدمة."
+    });
+  }
 });
 
 const port = process.env.PORT || 3000;
