@@ -648,7 +648,25 @@ async function getAssistantReply(message, history) {
       sidebar.classList.toggle("open");
     });
 
-  loadData();
+  document.getElementById("memoryBtn")
+  .addEventListener("click", () => {
+    const value = prompt(
+      "اكتب المعلومات التي تريد أن يتذكرها NEDAL AI:",
+      userMemory
+    );
+
+    if (value === null) return;
+
+    try {
+      saveMemory(value);
+      alert("تم حفظ الذاكرة بنجاح.");
+    } catch (error) {
+      alert("تعذر حفظ الذاكرة.");
+    }
+  });
+
+loadMemory();
+loadData();
 
   if (conversations.length > 0) {
     currentId = conversations[0].id;
