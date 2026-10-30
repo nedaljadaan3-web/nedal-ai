@@ -6,20 +6,27 @@ const path = require("path");
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: "20kb" }));
+app.use(express.json({ limit: "100kb" }));
 
 // الصفحة الرئيسية
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// استقبال الرسائل والرد عليها باستخدام Groq
+// استقبال الرسائل وسياق المحادثة
 app.post("/api/chat", async (req, res) => {
   const message = req.body?.message;
+  const history = req.body?.history;
 
   if (typeof message !== "string" || !message.trim()) {
     return res.status(400).json({
       error: "اكتب رسالتك أولاً."
+    });
+  }
+
+  if (history !== undefined && !Array.isArray(history)) {
+    return res.status(400).json({
+      error: "سجل المحادثة غير صالح."
     });
   }
 
@@ -32,6 +39,34 @@ app.post("/api/chat", async (req, res) => {
   }
 
   try {
+    const previousMessages = (history || [])
+      .filter(item =>
+        item &&
+        ["user", "assistant"].includes(item.role) &&
+        typeof item.content === "string"
+      )
+      .slice(-20)
+      .map(item => ({
+        role: item.role,
+        content: item.content.slice(0, 10000)
+      }));
+
+    const messages = [
+      {
+        role: "system",
+        content:
+          "أنت NEDAL AI، مساعد ذكي ومتعدد اللغات. " +
+          "أجب بلغة المستخدم، واستخدم العربية عندما يكتب بالعربية. " +
+          "تذكر سياق المحادثة السابقة واستخدمه لفهم الأسئلة الجديدة. " +
+          "كن واضحاً ومفيداً وصادقاً."
+      },
+      ...previousMessages,
+      {
+        role: "user",
+        content: message.trim()
+      }
+    ];
+
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
       {
@@ -42,17 +77,7 @@ app.post("/api/chat", async (req, res) => {
         },
         body: JSON.stringify({
           model: "openai/gpt-oss-20b",
-          messages: [
-            {
-              role: "system",
-              content:
-                "أنت NEDAL AI، مساعد ذكي ومتعدد اللغات. أجب بلغة المستخدم، واستخدم العربية عندما يكتب بالعربية. كن واضحاً ومفيداً."
-            },
-            {
-              role: "user",
-              content: message.trim()
-            }
-          ],
+          messages,
           max_completion_tokens: 1000,
           temperature: 0.7
         })
@@ -84,7 +109,7 @@ app.post("/api/chat", async (req, res) => {
     console.error("Groq Chat error:", error);
 
     return res.status(500).json({
-      error: "حدث خطأ أثناء الاتصال بخدمة الذكاء الاصطناعي."
+      error: "حدث خطأ أثناء الاتصال بالخدمة."
     });
   }
 });
@@ -95,4 +120,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, "0.0.0.0", () => {
   console.log(`NEDAL AI server listening on port ${port}`);
 });
-
