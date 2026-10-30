@@ -18,6 +18,10 @@ app.post("/api/chat", async (req, res) => {
   const message = req.body?.message;
   const history = req.body?.history;
   const memory = req.body?.memory;
+  const savedMemory =
+  typeof memory === "string"
+    ? memory.trim().slice(0, 4000)
+    : "";
 
   if (typeof message !== "string" || !message.trim()) {
     return res.status(400).json({
