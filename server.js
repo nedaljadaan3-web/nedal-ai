@@ -17,6 +17,7 @@ app.get("/", (req, res) => {
 app.post("/api/chat", async (req, res) => {
   const message = req.body?.message;
   const history = req.body?.history;
+  const memory = req.body?.memory;
 
   if (typeof message !== "string" || !message.trim()) {
     return res.status(400).json({
