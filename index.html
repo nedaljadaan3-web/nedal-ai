@@ -730,7 +730,12 @@ async function getAssistantReply(message, history) {
     speech.onerror = () => {
       speaking = false;
     };
-
+    
+console.log(speechSynthesis.getVoices().map(v => ({
+  name: v.name,
+  lang: v.lang
+})));
+    
     speechSynthesis.speak(speech);
   }
 
