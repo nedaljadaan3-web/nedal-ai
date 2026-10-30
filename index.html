@@ -687,16 +687,18 @@ async function getAssistantReply(message, history) {
     recognition = new SpeechRecognition();
     recognition.lang = "ar-SA";
     recognition.continuous = false;
-    recognition.interimResults = false;
+   recognition.interimResults = true;
 
-    recognition.onresult = event => {
-      const spokenText =
-        event.results[0][0].transcript;
+  recognition.onresult = event => {
+  let spokenText = "";
 
-      promptEl.value = spokenText;
-      recognition.stop();
-      formEl.requestSubmit();
-    };
+  for (let i = 0; i < event.results.length; i++) {
+    spokenText += event.results[i][0].transcript;
+  }
+
+  promptEl.value = spokenText;
+  promptEl.focus();
+};
 
     recognition.onerror = () => {
       if (voiceMode) {
