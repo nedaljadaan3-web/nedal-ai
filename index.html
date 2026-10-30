@@ -610,12 +610,15 @@ async function getAssistantReply(message, history) {
   conversation.messages.slice(0, -1)
 );
 
-      conversation.messages.push({
+            conversation.messages.push({
         role: "assistant",
         content: reply
       });
 
       conversation.updatedAt = Date.now();
+
+      speakReply(reply);
+
       saveData();
     } catch (error) {
       conversation.messages.push({
@@ -623,7 +626,6 @@ async function getAssistantReply(message, history) {
        content: "خطأ: " + error.message
       });
       
-      speakReply(reply);
       saveData();
     } finally {
       busy = false;
