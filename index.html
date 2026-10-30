@@ -551,9 +551,10 @@ async function getAssistantReply(message, history) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        message,
-        history
-      })
+  message,
+  history,
+  memory: userMemory
+})
     }
   );
 
