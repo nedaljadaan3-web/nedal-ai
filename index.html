@@ -314,7 +314,9 @@
     <button class="btn primary" id="newChat">
       ＋ محادثة جديدة
     </button>
-
+ <button class="btn" id="memoryBtn">
+  🧠 ذاكرة NEDAL AI
+  </button>
     <div class="history-title">سجل المحادثات المحفوظة</div>
     <div id="history"></div>
 
@@ -368,7 +370,20 @@
   let conversations = [];
   let currentId = null;
   let busy = false;
+  let userMemory = "";
 
+function loadMemory() {
+  try {
+    userMemory = localStorage.getItem(MEMORY_KEY) || "";
+  } catch (error) {
+    userMemory = "";
+  }
+}
+
+function saveMemory(value) {
+  userMemory = value.trim();
+  localStorage.setItem(MEMORY_KEY, userMemory);
+}
   function makeId() {
     return Date.now().toString(36) +
       Math.random().toString(36).slice(2, 9);
