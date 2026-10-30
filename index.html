@@ -527,7 +527,7 @@
     renderMessages();
   }
 
-  async function getAssistantReply(message) {
+async function getAssistantReply(message, history) {
   const response = await fetch(
     "https://nedal-ai-servrt.onrender.com/api/chat",
     {
@@ -535,25 +535,29 @@
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ message })
+      body: JSON.stringify({
+        message,
+        history
+      })
     }
   );
-const data = await response.json();  
-    
-if (!response.ok) {
-  throw new Error(
-    data.error || "خطأ من الخادم: " + response.status
-  );
-}
 
-if (!data.reply) {
-  throw new Error(data.error || "لم يصل رد من الخادم");
-}
+  const data = await response.json();
 
-return data.reply;
-
-  
+  if (!response.ok) {
+    throw new Error(
+      data.error || "خطأ من الخادم: " + response.status
+    );
   }
+
+  if (!data.reply) {
+    throw new Error("لم يصل رد من الخادم");
+  }
+
+  return data.reply;
+}
+
+ 
     async function sendMessage(text) {
     if (busy || !text.trim()) return;
 
@@ -583,7 +587,10 @@ return data.reply;
     promptEl.value = "";
 
     try {
-      const reply = await getAssistantReply(text);
+      const reply = await getAssistantReply(
+  text,
+  conversation.messages.slice(0, -1)
+);
 
       conversation.messages.push({
         role: "assistant",
