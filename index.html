@@ -340,12 +340,13 @@
     <section id="messages" aria-live="polite"></section>
 
     <div class="composer-wrap">
-      <form class="composer" id="chatForm">
-        <textarea id="prompt" rows="1"
-          placeholder="اكتب رسالتك هنا..."
-          aria-label="رسالتك"></textarea>
-        <button id="send" type="submit" aria-label="إرسال">➤</button>
-      </form>
+     <form class="composer" id="chatForm">
+  <button id="voiceBtn" type="button" aria-label="بدء المحادثة الصوتية">🎙️</button>
+  <textarea id="prompt" rows="1"
+    placeholder="اكتب رسالتك هنا..."
+    aria-label="رسالتك"></textarea>
+  <button id="send" type="submit" aria-label="إرسال">➤</button>
+</form>
       <div class="notice">
         يمكنك الكتابة باللغة العربية أو الألمانية.
         هذه النسخة تحتاج إلى ربط خدمة ذكاء اصطناعي للحصول على إجابات حقيقية.
@@ -365,6 +366,7 @@
   const promptEl = document.getElementById("prompt");
   const formEl = document.getElementById("chatForm");
   const sendBtn = document.getElementById("send");
+  const voiceBtn = document.getElementById("voiceBtn");
   const sidebar = document.getElementById("sidebar");
 
   let conversations = [];
@@ -620,6 +622,8 @@ async function getAssistantReply(message, history) {
         role: "assistant",
        content: "خطأ: " + error.message
       });
+      
+      speakReply(reply);
       saveData();
     } finally {
       busy = false;
@@ -665,7 +669,82 @@ async function getAssistantReply(message, history) {
       alert("تعذر حفظ الذاكرة.");
     }
   });
+  let voiceMode = false;
+  let recognition = null;
+  let speaking = false;
 
+  function startListening() {
+    const SpeechRecognition =
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("المتصفح لا يدعم التعرف على الصوت. جرّب Chrome.");
+      voiceMode = false;
+      return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = "ar-SA";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = event => {
+      const spokenText =
+        event.results[0][0].transcript;
+
+      promptEl.value = spokenText;
+      recognition.stop();
+      formEl.requestSubmit();
+    };
+
+    recognition.onerror = () => {
+      if (voiceMode) {
+        voiceMode = false;
+        voiceBtn.textContent = "🎙️";
+        alert("تعذر تشغيل الميكروفون. تحقق من إذن الصوت.");
+      }
+    };
+
+    recognition.start();
+  }
+
+  function speakReply(text) {
+    if (!voiceMode) return;
+
+    speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "ar-SA";
+    speech.rate = 1;
+
+    speaking = true;
+
+    speech.onend = () => {
+      speaking = false;
+      if (voiceMode) startListening();
+    };
+
+    speech.onerror = () => {
+      speaking = false;
+    };
+
+    speechSynthesis.speak(speech);
+  }
+
+  voiceBtn.addEventListener("click", () => {
+    voiceMode = !voiceMode;
+
+    if (voiceMode) {
+      voiceBtn.textContent = "⏹️";
+      startListening();
+    } else {
+      if (recognition) recognition.stop();
+      speechSynthesis.cancel();
+      speaking = false;
+      voiceBtn.textContent = "🎙️";
+    }
+  });
 loadMemory();
 loadData();
 
