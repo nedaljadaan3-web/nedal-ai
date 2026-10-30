@@ -711,34 +711,42 @@ async function getAssistantReply(message, history) {
     recognition.start();
   }
 
-  function speakReply(text) {
-    if (!voiceMode) return;
+function speakReply(text) {
+  if (!voiceMode) return;
 
-    speechSynthesis.cancel();
+  speechSynthesis.cancel();
 
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = "ar-SA";
-    speech.rate = 1;
+  const voices = speechSynthesis.getVoices();
 
-    speaking = true;
+  const arabicVoice =
+    voices.find(v => v.lang === "ar-SY" && v.name.includes("أماني")) ||
+    voices.find(v => v.lang === "ar-SY") ||
+    voices.find(v => v.lang.startsWith("ar"));
 
-    speech.onend = () => {
-      speaking = false;
-      if (voiceMode) startListening();
-    };
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "ar-SY";
+  speech.rate = 1;
+  speech.pitch = 1;
 
-    speech.onerror = () => {
-      speaking = false;
-    };
-    
-console.log(speechSynthesis.getVoices().map(v => ({
-  name: v.name,
-  lang: v.lang
-})));
-    
-    speechSynthesis.speak(speech);
+  if (arabicVoice) {
+    speech.voice = arabicVoice;
   }
 
+  speaking = true;
+
+  speech.onend = () => {
+    speaking = false;
+    if (voiceMode) startListening();
+  };
+
+  speech.onerror = () => {
+    speaking = false;
+  };
+
+  speechSynthesis.speak(speech);
+}
+
+ 
   voiceBtn.addEventListener("click", () => {
     voiceMode = !voiceMode;
 
