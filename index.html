@@ -340,24 +340,25 @@
     <section id="messages" aria-live="polite"></section>
 
     <div class="composer-wrap">
-     <form class="composer" id="chatForm">
-  <button id="voiceBtn" type="button" aria-label="بدء المحادثة الصوتية">🎙️</button>
+   <form class="composer" id="chatForm">
+
+  <button id="voiceBtn" type="button"
+    aria-label="بدء المحادثة الصوتية">🎙️</button>
+
+  <button id="imageBtn" type="button"
+    aria-label="إرفاق صورة">📎</button>
+
+  <input id="imageInput" type="file"
+    accept="image/*" hidden>
+
   <textarea id="prompt" rows="1"
     placeholder="اكتب رسالتك هنا..."
     aria-label="رسالتك"></textarea>
-  <button id="send" type="submit" aria-label="إرسال">➤</button>
-</form>
-      <div class="notice">
-        يمكنك الكتابة باللغة العربية أو الألمانية.
-        هذه النسخة تحتاج إلى ربط خدمة ذكاء اصطناعي للحصول على إجابات حقيقية.
-      </div>
-    </div>
-  </main>
-</div>
 
-<script>
-(() => {
-  "use strict";
+  <button id="send" type="submit"
+    aria-label="إرسال">➤</button>
+
+</form>
 
   const STORAGE_KEY = "nedal_ai_conversations_v1";
   const MEMORY_KEY = "nedal_ai_memory_v1";
@@ -368,12 +369,15 @@
   const formEl = document.getElementById("chatForm");
   const sendBtn = document.getElementById("send");
   const voiceBtn = document.getElementById("voiceBtn");
+   const imageBtn = document.getElementById("imageBtn");
+const imageInput = document.getElementById("imageInput");   
   const sidebar = document.getElementById("sidebar");
 
   let conversations = [];
   let currentId = null;
   let busy = false;
   let userMemory = "";
+  let selectedImage = null;  
 
 function loadMemory() {
   try {
@@ -552,7 +556,7 @@ function saveMemory(value) {
     renderMessages();
   }
 
-async function getAssistantReply(message, history) {
+async function getAssistantReply(message, history, image = null) {
   const response = await fetch(
     "https://nedal-ai-servrt.onrender.com/api/chat",
     {
@@ -561,10 +565,11 @@ async function getAssistantReply(message, history) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-  message,
-  history,
-  memory: userMemory
-})
+        message,
+        history,
+        memory: userMemory,
+        image
+      })
     }
   );
 
@@ -585,7 +590,7 @@ async function getAssistantReply(message, history) {
 
  
     async function sendMessage(text) {
-    if (busy || !text.trim()) return;
+    if (busy || (!text.trim() && !selectedImage)) return;
 
     if (!currentConversation()) {
       createConversation();
@@ -599,7 +604,7 @@ async function getAssistantReply(message, history) {
 
     conversation.messages.push({
       role: "user",
-      content: text.trim()
+      content: text.trim() || "📷 صورة مرفقة"
     });
 
     if (conversation.title === "محادثة جديدة") {
@@ -610,12 +615,16 @@ async function getAssistantReply(message, history) {
     saveData();
     renderAll();
 
+   const imageToSend = selectedImage;
     promptEl.value = "";
+   selectedImage = null;
+   imageInput.value = "";
 
     try {
-      const reply = await getAssistantReply(
+  const reply = await getAssistantReply(
   text,
-  conversation.messages.slice(0, -1)
+  conversation.messages.slice(0, -1),
+  imageToSend
 );
 
             conversation.messages.push({
@@ -647,7 +656,32 @@ async function getAssistantReply(message, history) {
     event.preventDefault();
     sendMessage(promptEl.value);
   });
+imageBtn.addEventListener("click", () => {
+  imageInput.click();
+});
+   imageInput.addEventListener("change", () => {
+  const file = imageInput.files?.[0];
 
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("الرجاء اختيار صورة.");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    selectedImage = reader.result;
+    alert("تم اختيار الصورة بنجاح. اكتب سؤالك ثم اضغط إرسال.");
+  };
+
+  reader.onerror = () => {
+    alert("تعذر قراءة الصورة.");
+  };
+
+  reader.readAsDataURL(file);
+});   
   promptEl.addEventListener("keydown", event => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
