@@ -449,28 +449,41 @@ conversation.messages.push({
       alert("تعذر بدء الميكروفون.");
     }
   }
-
-  function speakReply(text) {
-    if (!voiceMode || !("speechSynthesis" in window)) return;
-    speechSynthesis.cancel();
-    const voices = speechSynthesis.getVoices();
-    const arabicVoice = voices.find(v => v.lang === "ar-SY" && v.name.includes("أماني")) ||
-      voices.find(v => v.lang === "ar-SY") ||
-      voices.find(v => v.lang.startsWith("ar"));
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = "ar-SY";
-    speech.rate = 1;
-    speech.pitch = 1;
-    if (arabicVoice) speech.voice = arabicVoice;
-    speaking = true;
-    speech.onend = () => {
-      speaking = false;
-      if (voiceMode) startListening();
-    };
-    speech.onerror = () => { speaking = false; };
-    speechSynthesis.speak(speech);
+function speakReply(text) {
+  if (!("speechSynthesis" in window)) {
+    alert("ميزة تحويل النص إلى صوت غير مدعومة في المتصفح");
+    return;
   }
 
+  speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance(String(text));
+  speech.lang = "ar";
+  speech.rate = 0.9;
+  speech.pitch = 1;
+
+  const voices = speechSynthesis.getVoices();
+  const arabicVoice = voices.find(v => v.lang.startsWith("ar"));
+
+  if (arabicVoice) {
+    speech.voice = arabicVoice;
+  }
+
+  speaking = true;
+
+  speech.onend = () => {
+    speaking = false;
+    if (voiceMode) startListening();
+  };
+
+  speech.onerror = (event) => {
+    speaking = false;
+    console.log("Speech error:", event.error);
+  };
+
+  speechSynthesis.speak(speech);
+}
+ 
   voiceBtn.addEventListener("click", () => {
     voiceMode = !voiceMode;
     if (voiceMode) {
