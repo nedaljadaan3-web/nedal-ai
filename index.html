@@ -361,6 +361,7 @@
 
   const STORAGE_KEY = "nedal_ai_conversations_v1";
   const MEMORY_KEY = "nedal_ai_memory_v1";
+  const SESSION_KEY = "nedal_ai_session_v1";
   const messagesEl = document.getElementById("messages");
   const historyEl = document.getElementById("history");
   const promptEl = document.getElementById("prompt");
@@ -434,6 +435,7 @@ function saveMemory(value) {
 
     conversations.unshift(conversation);
     currentId = conversation.id;
+    sessionStorage.setItem(SESSION_KEY, currentId);
     saveData();
     renderAll();
     sidebar.classList.remove("open");
@@ -504,6 +506,7 @@ function saveMemory(value) {
 
       open.addEventListener("click", () => {
         currentId = conversation.id;
+        sessionStorage.setItem(SESSION_KEY, currentId);
         renderAll();
         sidebar.classList.remove("open");
       });
@@ -524,6 +527,11 @@ function saveMemory(value) {
         if (currentId === conversation.id) {
           currentId = conversations.length
             ? conversations[0].id : null;
+          if (currentId) {
+  sessionStorage.setItem(SESSION_KEY, currentId);
+} else {
+  sessionStorage.removeItem(SESSION_KEY);
+}
         }
 
         saveData();
@@ -765,12 +773,27 @@ function speakReply(text) {
 loadMemory();
 loadData();
 
-  if (conversations.length > 0) {
-    currentId = conversations[0].id;
-    renderAll();
+try {
+  const savedSession = sessionStorage.getItem(SESSION_KEY);
+
+  if (savedSession && conversations.some(c => c.id === savedSession)) {
+    currentId = savedSession;
   } else {
-    createConversation();
+    currentId = null;
   }
+} catch (error) {
+  currentId = null;
+}
+
+if (!currentId) {
+  createConversation();
+} else {
+  renderAll();
+}
+
+window.addEventListener("pagehide", () => {
+  sessionStorage.removeItem(SESSION_KEY);
+});
 })();
 </script>
 </body>
