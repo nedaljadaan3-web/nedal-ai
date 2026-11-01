@@ -6,7 +6,7 @@ const path = require("path");
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: "100kb" }));
+app.use(express.json({ limit: "10mb" }));
 
 // الصفحة الرئيسية
 app.get("/", (req, res) => {
@@ -18,16 +18,21 @@ app.post("/api/chat", async (req, res) => {
   const message = req.body?.message;
   const history = req.body?.history;
   const memory = req.body?.memory;
+  const image = req.body?.image;
+  if (
   const savedMemory =
   typeof memory === "string"
     ? memory.trim().slice(0, 4000)
     : "";
 
-  if (typeof message !== "string" || !message.trim()) {
-    return res.status(400).json({
-      error: "اكتب رسالتك أولاً."
-    });
-  }
+if (
+  (typeof message !== "string" || !message.trim()) &&
+  !image
+) {
+  return res.status(400).json({
+    error: "اكتب رسالة أو أرفق صورة أولاً."
+  });
+}
 
   if (history !== undefined && !Array.isArray(history)) {
     return res.status(400).json({
@@ -56,25 +61,44 @@ app.post("/api/chat", async (req, res) => {
         content: item.content.slice(0, 10000)
       }));
 
-    const messages = [
+   const userText =
+  typeof message === "string" ? message.trim() : "";
+
+const userContent = image
+  ? [
       {
-  role: "system",
-  content:
-    "أنت NEDAL AI، مساعد ذكي ومتعدد اللغات. " +
-    "أجب بلغة المستخدم، واستخدم العربية عندما يكتب بالعربية. " +
-    "تذكر سياق المحادثة السابقة واستخدمه لفهم الأسئلة الجديدة. " +
-    "اسمك NEDAL AI واسم المستخدم نضال إذا ذكر ذلك. " +
-    "كن واضحاً ومفيداً وصادقاً." +
-    (savedMemory
-      ? "\n\nمعلومات محفوظة عن المستخدم، استخدمها عند الحاجة:\n" + savedMemory
-      : "")
-},
-      ...previousMessages,
+        type: "text",
+        text: userText || "اشرح هذه الصورة واقرأ النص الظاهر فيها إن وجد."
+      },
       {
-        role: "user",
-        content: message.trim()
+        type: "image_url",
+        image_url: {
+          url: image
+        }
       }
-    ];
+    ]
+  : userText;
+
+const messages = [
+  {
+    role: "system",
+    content:
+      "أنت NEDAL AI، مساعد ذكي ومتعدد اللغات. " +
+      "أجب بلغة المستخدم، واستخدم العربية عندما يكتب بالعربية. " +
+      "تذكر سياق المحادثة السابقة واستخدمه لفهم الأسئلة الجديدة. " +
+      "اسمك NEDAL AI واسم المستخدم نضال إذا ذكر ذلك. " +
+      "كن واضحاً ومفيداً وصادقاً." +
+      (savedMemory
+        ? "\n\nمعلومات محفوظة عن المستخدم، استخدمها عند الحاجة:\n" + savedMemory
+        : "")
+  },
+  ...previousMessages,
+  {
+    role: "user",
+    content: userContent
+  }
+];
+     
 
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
@@ -85,7 +109,9 @@ app.post("/api/chat", async (req, res) => {
           "Authorization": `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: "openai/gpt-oss-20b",
+          model: image
+  ? "qwen/qwen3.8-27b"
+  : "openai/gpt-oss-20b",
           messages,
           max_completion_tokens: 1000,
           temperature: 0.7
