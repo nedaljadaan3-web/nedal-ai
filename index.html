@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,421 +5,150 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1020">
   <title>NEDAL AI - مساعدك الذكي</title>
-
   <style>
     * { box-sizing: border-box; }
-
     :root {
-      --bg: #0b1020;
-      --panel: #111a2e;
-      --panel2: #17233b;
-      --text: #edf2ff;
-      --muted: #9aa9c4;
-      --accent: #7c83ff;
-      --border: #293650;
+      --bg:#0b1020; --panel:#111a2e; --panel2:#17233b;
+      --text:#edf2ff; --muted:#9aa9c4; --accent:#7c83ff; --border:#293650;
     }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, sans-serif;
-      min-height: 100vh;
-    }
-
-    button, textarea { font: inherit; }
-
-    button {
-      cursor: pointer;
-      color: var(--text);
-    }
-
-    .app {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      width: 280px;
-      flex-shrink: 0;
-      background: var(--panel);
-      border-left: 1px solid var(--border);
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .brand {
-      font-size: 25px;
-      font-weight: bold;
-      color: #a5a8ff;
-      padding: 8px 2px;
-    }
-
-    .brand small {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: normal;
-      margin-top: 7px;
-    }
-
-    .btn {
-      border: 1px solid var(--border);
-      background: var(--panel2);
-      border-radius: 12px;
-      padding: 12px;
-      width: 100%;
-      text-align: right;
-    }
-
-    .btn.primary {
-      background: var(--accent);
-      color: white;
-      border-color: transparent;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .history-title {
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 10px;
-    }
-
-    #history {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      overflow-y: auto;
-    }
-
-    .history-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .history-open {
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      text-align: right;
-      border: 0;
-      background: transparent;
-      padding: 10px 5px;
-      border-radius: 8px;
-    }
-
-    .history-open.active,
-    .history-open:hover {
-      background: var(--panel2);
-    }
-
-    .delete-btn {
-      background: transparent;
-      border: 0;
-      color: #ff9292;
-      padding: 8px;
-    }
-
-    .sidebar-note {
-      margin-top: auto;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.8;
-    }
-
-    .main {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    .topbar {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .topbar strong { font-size: 18px; }
-
-    .menu-btn {
-      display: none;
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 8px 12px;
-    }
-
-    #messages {
-      flex: 1;
-      width: 100%;
-      max-width: 850px;
-      margin: 0 auto;
-      padding: 25px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .welcome {
-      margin: auto 0;
-      text-align: center;
-      padding: 35px 10px;
-    }
-
-    .welcome .logo {
-      font-size: 42px;
-      margin-bottom: 12px;
-    }
-
-    .welcome h1 {
-      font-size: 29px;
-      margin: 10px 0;
-    }
-
-    .welcome p {
-      color: var(--muted);
-      line-height: 1.9;
-    }
-
-    .message {
-      max-width: 90%;
-      line-height: 1.9;
-      overflow-wrap: anywhere;
-    }
-
-    .message.user {
-      align-self: flex-start;
-      background: #253453;
-      padding: 12px 16px;
-      border-radius: 16px 16px 4px 16px;
-      white-space: pre-wrap;
-    }
-
-    .message.assistant {
-      align-self: stretch;
-      padding: 4px 3px;
-      white-space: pre-wrap;
-    }
-
-    .message-label {
-      display: block;
-      color: #a5a8ff;
-      font-size: 12px;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    .composer-wrap {
-      padding: 12px 16px 18px;
-      width: 100%;
-      max-width: 850px;
-      margin: 0 auto;
-    }
-
-    .composer {
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 10px;
-    }
-
-    #prompt {
-      flex: 1;
-      min-width: 0;
-      max-height: 160px;
-      resize: vertical;
-      border: 0;
-      outline: 0;
-      color: var(--text);
-      background: transparent;
-      padding: 10px;
-      line-height: 1.7;
-    }
-
-    #prompt::placeholder { color: var(--muted); }
-
-    #send {
-      width: 44px;
-      height: 44px;
-      border: 0;
-      border-radius: 12px;
-      background: var(--accent);
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-
-    #send:disabled {
-      opacity: .5;
-      cursor: wait;
-    }
-
-    .notice {
-      text-align: center;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.7;
-      margin-top: 9px;
-    }
-
-    @media (max-width: 700px) {
-      .sidebar {
-        position: fixed;
-        z-index: 10;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        transform: translateX(105%);
-        transition: transform .2s;
-        box-shadow: none;
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-        box-shadow: -10px 0 35px #0008;
-      }
-
-      .menu-btn { display: block; }
-      .topbar { padding: 13px; }
-      #messages { padding: 20px 14px; }
-      .welcome h1 { font-size: 25px; }
-      .message { max-width: 96%; }
-      .composer-wrap { padding: 10px; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:Arial,sans-serif; min-height:100vh; }
+    button,textarea { font:inherit; }
+    button { cursor:pointer; color:var(--text); }
+    .app { display:flex; min-height:100vh; }
+    .sidebar { width:280px; flex-shrink:0; background:var(--panel); border-left:1px solid var(--border); padding:18px; display:flex; flex-direction:column; gap:14px; }
+    .brand { font-size:25px; font-weight:bold; color:#a5a8ff; padding:8px 2px; }
+    .brand small { display:block; color:var(--muted); font-size:12px; font-weight:normal; margin-top:7px; }
+    .btn { border:1px solid var(--border); background:var(--panel2); border-radius:12px; padding:12px; width:100%; text-align:right; }
+    .btn.primary { background:var(--accent); color:white; border-color:transparent; text-align:center; font-weight:bold; }
+    .history-title { color:var(--muted); font-size:13px; margin-top:10px; }
+    #history { display:flex; flex-direction:column; gap:7px; overflow-y:auto; }
+    .history-item { display:flex; align-items:center; gap:5px; }
+    .history-open { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:right; border:0; background:transparent; padding:10px 5px; border-radius:8px; }
+    .history-open.active,.history-open:hover { background:var(--panel2); }
+    .delete-btn { background:transparent; border:0; color:#ff9292; padding:8px; }
+    .sidebar-note { margin-top:auto; color:var(--muted); font-size:12px; line-height:1.8; }
+    .main { flex:1; min-width:0; display:flex; flex-direction:column; min-height:100vh; }
+    .topbar { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+    .topbar strong { font-size:18px; }
+    .menu-btn { display:none; background:var(--panel2); border:1px solid var(--border); border-radius:9px; padding:8px 12px; }
+    #messages { flex:1; width:100%; max-width:850px; margin:0 auto; padding:25px 18px; display:flex; flex-direction:column; gap:20px; }
+    .welcome { margin:auto 0; text-align:center; padding:35px 10px; }
+    .welcome .logo { font-size:42px; margin-bottom:12px; }
+    .welcome h1 { font-size:29px; margin:10px 0; }
+    .welcome p { color:var(--muted); line-height:1.9; }
+    .message { max-width:90%; line-height:1.9; overflow-wrap:anywhere; }
+    .message.user { align-self:flex-start; background:#253453; padding:12px 16px; border-radius:16px 16px 4px 16px; white-space:pre-wrap; }
+    .message.assistant { align-self:stretch; padding:4px 3px; white-space:pre-wrap; }
+    .message-label { display:block; color:#a5a8ff; font-size:12px; margin-bottom:5px; font-weight:bold; }
+    .composer-wrap { padding:12px 16px 18px; width:100%; max-width:850px; margin:0 auto; }
+    .composer { display:flex; align-items:flex-end; gap:8px; background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:10px; }
+    #prompt { flex:1; min-width:0; max-height:160px; resize:vertical; border:0; outline:0; color:var(--text); background:transparent; padding:10px; line-height:1.7; }
+    #prompt::placeholder { color:var(--muted); }
+    #send,#voiceBtn,#imageBtn { min-width:42px; height:44px; border:0; border-radius:12px; background:var(--panel2); font-size:19px; flex-shrink:0; }
+    #send { background:var(--accent); }
+    #send:disabled { opacity:.5; cursor:wait; }
+    .notice { text-align:center; color:var(--muted); font-size:11px; line-height:1.7; margin-top:9px; }
+    #imageStatus { color:#a5a8ff; font-size:12px; padding:0 8px; min-height:18px; }
+    @media(max-width:700px) {
+      .sidebar { position:fixed; z-index:10; top:0; bottom:0; right:0; transform:translateX(105%); transition:transform .2s; box-shadow:none; }
+      .sidebar.open { transform:translateX(0); box-shadow:-10px 0 35px #0008; }
+      .menu-btn { display:block; } .topbar { padding:13px; }
+      #messages { padding:20px 14px; } .welcome h1 { font-size:25px; }
+      .message { max-width:96%; } .composer-wrap { padding:10px; }
+      .composer { gap:5px; padding:7px; }
     }
   </style>
 </head>
-
 <body>
 <div class="app">
-
   <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      NEDAL AI
-      <small>مساعدك الرقمي</small>
-    </div>
-
-    <button class="btn primary" id="newChat">
-      ＋ محادثة جديدة
-    </button>
- <button class="btn" id="memoryBtn">
-  🧠 ذاكرة NEDAL AI
-  </button>
+    <div class="brand">NEDAL AI<small>مساعدك الرقمي</small></div>
+    <button class="btn primary" id="newChat">＋ محادثة جديدة</button>
+    <button class="btn" id="memoryBtn">🧠 ذاكرة NEDAL AI</button>
     <div class="history-title">سجل المحادثات المحفوظة</div>
     <div id="history"></div>
-
-    <div class="sidebar-note">
-      تُحفظ محادثاتك على هذا المتصفح فقط.
-      لا تمسح بيانات المتصفح إذا أردت الاحتفاظ بها.
-    </div>
+    <div class="sidebar-note">تُحفظ محادثاتك على هذا المتصفح فقط. لا تمسح بيانات المتصفح إذا أردت الاحتفاظ بها.</div>
   </aside>
-
   <main class="main">
     <header class="topbar">
-      <button class="menu-btn" id="menuBtn" aria-label="فتح القائمة">
-        ☰
-      </button>
+      <button class="menu-btn" id="menuBtn" aria-label="فتح القائمة">☰</button>
       <strong>NEDAL AI</strong>
-      <span style="color:var(--muted);font-size:12px">
-        مساعدك الذكي
-      </span>
+      <span style="color:var(--muted);font-size:12px">مساعدك الذكي</span>
     </header>
-
     <section id="messages" aria-live="polite"></section>
-
     <div class="composer-wrap">
-   <form class="composer" id="chatForm">
+      <form class="composer" id="chatForm">
+        <button id="voiceBtn" type="button" aria-label="بدء المحادثة الصوتية">🎙️</button>
+        <button id="imageBtn" type="button" aria-label="إرفاق صورة">📎</button>
+        <input id="imageInput" type="file" accept="image/*" hidden>
+        <textarea id="prompt" rows="1" placeholder="اكتب رسالتك هنا..." aria-label="رسالتك"></textarea>
+        <button id="send" type="submit" aria-label="إرسال">➤</button>
+      </form>
+      <div id="imageStatus"></div>
+      <div class="notice">قد يخطئ NEDAL AI أحياناً؛ تحقق من المعلومات المهمة.</div>
+    </div>
+  </main>
+</div>
 
-  <button id="voiceBtn" type="button"
-    aria-label="بدء المحادثة الصوتية">🎙️</button>
+<script>
+(() => {
+  "use strict";
 
-  <button id="imageBtn" type="button"
-    aria-label="إرفاق صورة">📎</button>
-
-  <input id="imageInput" type="file"
-    accept="image/*" hidden>
-
-  <textarea id="prompt" rows="1"
-    placeholder="اكتب رسالتك هنا..."
-    aria-label="رسالتك"></textarea>
-
-  <button id="send" type="submit"
-    aria-label="إرسال">➤</button>
-
-</form>
-
+  const API_URL = "https://nedal-ai-servrt.onrender.com/api/chat";
   const STORAGE_KEY = "nedal_ai_conversations_v1";
   const MEMORY_KEY = "nedal_ai_memory_v1";
   const SESSION_KEY = "nedal_ai_session_v1";
+
   const messagesEl = document.getElementById("messages");
   const historyEl = document.getElementById("history");
   const promptEl = document.getElementById("prompt");
   const formEl = document.getElementById("chatForm");
   const sendBtn = document.getElementById("send");
   const voiceBtn = document.getElementById("voiceBtn");
-   const imageBtn = document.getElementById("imageBtn");
-const imageInput = document.getElementById("imageInput");   
+  const imageBtn = document.getElementById("imageBtn");
+  const imageInput = document.getElementById("imageInput");
+  const imageStatus = document.getElementById("imageStatus");
   const sidebar = document.getElementById("sidebar");
 
   let conversations = [];
   let currentId = null;
   let busy = false;
   let userMemory = "";
-  let selectedImage = null;  
+  let selectedImage = null;
+  let voiceMode = false;
+  let recognition = null;
+  let speaking = false;
 
-function loadMemory() {
-  try {
-    userMemory = localStorage.getItem(MEMORY_KEY) || "";
-  } catch (error) {
-    userMemory = "";
-  }
-}
-
-function saveMemory(value) {
-  userMemory = value.trim();
-  localStorage.setItem(MEMORY_KEY, userMemory);
-}
   function makeId() {
-    return Date.now().toString(36) +
-      Math.random().toString(36).slice(2, 9);
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
+  }
+
+  function loadMemory() {
+    try { userMemory = localStorage.getItem(MEMORY_KEY) || ""; }
+    catch (error) { userMemory = ""; }
+  }
+
+  function saveMemory(value) {
+    userMemory = value.trim();
+    localStorage.setItem(MEMORY_KEY, userMemory);
   }
 
   function loadData() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       const parsed = raw ? JSON.parse(raw) : [];
-
-      if (Array.isArray(parsed)) {
-        conversations = parsed.filter(c =>
-          c && typeof c.id === "string" &&
-          Array.isArray(c.messages)
-        );
-      }
-    } catch (error) {
-      conversations = [];
-    }
+      conversations = Array.isArray(parsed) ? parsed.filter(c =>
+        c && typeof c.id === "string" && Array.isArray(c.messages)
+      ) : [];
+    } catch (error) { conversations = []; }
   }
 
   function saveData() {
     try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(conversations)
-      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
       return true;
     } catch (error) {
-      alert("تعذر حفظ المحادثات. تحقق من مساحة المتصفح.");
+      alert("تعذر حفظ المحادثات. قد تكون مساحة المتصفح ممتلئة.");
       return false;
     }
   }
@@ -431,44 +159,31 @@ function saveMemory(value) {
 
   function createConversation() {
     const conversation = {
-      id: makeId(),
-      title: "محادثة جديدة",
-      updatedAt: Date.now(),
-      messages: []
+      id: makeId(), title: "محادثة جديدة",
+      updatedAt: Date.now(), messages: []
     };
-
     conversations.unshift(conversation);
     currentId = conversation.id;
-    sessionStorage.setItem(SESSION_KEY, currentId);
+    try { sessionStorage.setItem(SESSION_KEY, currentId); } catch (error) {}
     saveData();
     renderAll();
     sidebar.classList.remove("open");
     promptEl.focus();
   }
 
-  function escapeText(value) {
-    return String(value);
-  }
-
   function renderMessages() {
     messagesEl.replaceChildren();
     const conversation = currentConversation();
-
     if (!conversation || conversation.messages.length === 0) {
       const welcome = document.createElement("div");
       welcome.className = "welcome";
-
       const logo = document.createElement("div");
       logo.className = "logo";
       logo.textContent = "✦";
-
       const heading = document.createElement("h1");
       heading.textContent = "أهلًا بك في NEDAL AI";
-
       const description = document.createElement("p");
-      description.textContent =
-        "كيف يمكنني مساعدتك اليوم؟ اكتب سؤالك للبدء.";
-
+      description.textContent = "كيف يمكنني مساعدتك اليوم؟ اكتب سؤالك للبدء.";
       welcome.append(logo, heading, description);
       messagesEl.append(welcome);
       return;
@@ -476,41 +191,34 @@ function saveMemory(value) {
 
     conversation.messages.forEach(message => {
       const bubble = document.createElement("div");
-      bubble.className = "message " +
-        (message.role === "user" ? "user" : "assistant");
-
+      bubble.className = "message " + (message.role === "user" ? "user" : "assistant");
       if (message.role !== "user") {
         const label = document.createElement("span");
         label.className = "message-label";
         label.textContent = "NEDAL AI";
         bubble.append(label);
       }
-
       const content = document.createElement("div");
-      content.textContent = escapeText(message.content);
+      content.textContent = String(message.content || "");
       bubble.append(content);
       messagesEl.append(bubble);
     });
-
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
   function renderHistory() {
     historyEl.replaceChildren();
-
     conversations.forEach(conversation => {
       const row = document.createElement("div");
       row.className = "history-item";
 
       const open = document.createElement("button");
-      open.className = "history-open" +
-        (conversation.id === currentId ? " active" : "");
+      open.className = "history-open" + (conversation.id === currentId ? " active" : "");
       open.textContent = conversation.title || "محادثة جديدة";
-      open.title = conversation.title || "محادثة جديدة";
-
+      open.title = open.textContent;
       open.addEventListener("click", () => {
         currentId = conversation.id;
-        sessionStorage.setItem(SESSION_KEY, currentId);
+        try { sessionStorage.setItem(SESSION_KEY, currentId); } catch (error) {}
         renderAll();
         sidebar.classList.remove("open");
       });
@@ -520,30 +228,18 @@ function saveMemory(value) {
       remove.textContent = "×";
       remove.title = "حذف المحادثة";
       remove.setAttribute("aria-label", "حذف المحادثة");
-
       remove.addEventListener("click", () => {
         if (!confirm("هل تريد حذف هذه المحادثة نهائيًا؟")) return;
-
-        conversations = conversations.filter(
-          c => c.id !== conversation.id
-        );
-
-        if (currentId === conversation.id) {
-          currentId = conversations.length
-            ? conversations[0].id : null;
-          if (currentId) {
-  sessionStorage.setItem(SESSION_KEY, currentId);
-} else {
-  sessionStorage.removeItem(SESSION_KEY);
-}
-        }
-
-        saveData();
-        if (!currentId) {
-          createConversation();
+        conversations = conversations.filter(c => c.id !== conversation.id);
+        if (currentId === conversation.id) currentId = conversations[0]?.id || null;
+        if (currentId) {
+          try { sessionStorage.setItem(SESSION_KEY, currentId); } catch (error) {}
         } else {
-          renderAll();
+          try { sessionStorage.removeItem(SESSION_KEY); } catch (error) {}
         }
+        saveData();
+        if (!currentId) createConversation();
+        else renderAll();
       });
 
       row.append(open, remove);
@@ -556,93 +252,86 @@ function saveMemory(value) {
     renderMessages();
   }
 
-async function getAssistantReply(message, history, image = null) {
-  const response = await fetch(
-    "https://nedal-ai-servrt.onrender.com/api/chat",
-    {
+  async function getAssistantReply(message, history, image = null) {
+    const response = await fetch(API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message,
-        history,
-        memory: userMemory,
-        image
-      })
-    }
-  );
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, history, memory: userMemory, image })
+    });
 
-  const data = await response.json();
+    let data;
+    try { data = await response.json(); }
+    catch (error) { throw new Error("تعذر قراءة رد الخادم."); }
 
-  if (!response.ok) {
-    throw new Error(
-      data.error || "خطأ من الخادم: " + response.status
-    );
+    if (!response.ok) throw new Error(data.error || "خطأ من الخادم: " + response.status);
+    if (!data.reply) throw new Error("لم يصل رد من الخادم.");
+    return data.reply;
   }
 
-  if (!data.reply) {
-    throw new Error("لم يصل رد من الخادم");
+  function resizeImage(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("تعذرت قراءة الصورة."));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error("صيغة الصورة غير مدعومة."));
+        img.onload = () => {
+          const maxSide = 1280;
+          const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(img.width * scale));
+          canvas.height = Math.max(1, Math.round(img.height * scale));
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", 0.78));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
-  return data.reply;
-}
+  async function sendMessage(text) {
+    const cleanText = String(text || "").trim();
+    if (busy || (!cleanText && !selectedImage)) return;
 
- 
-    async function sendMessage(text) {
-    if (busy || (!text.trim() && !selectedImage)) return;
-
-    if (!currentConversation()) {
-      createConversation();
-    }
-
+    if (!currentConversation()) createConversation();
     const conversation = currentConversation();
     if (!conversation) return;
 
+    const imageToSend = selectedImage;
+    const messageForHistory = cleanText || "📷 صورة مرفقة";
     busy = true;
     sendBtn.disabled = true;
 
-    conversation.messages.push({
-      role: "user",
-      content: text.trim() || "📷 صورة مرفقة"
-    });
-
+    conversation.messages.push({ role: "user", content: messageForHistory });
     if (conversation.title === "محادثة جديدة") {
-      conversation.title = text.trim().slice(0, 38);
+      conversation.title = (cleanText || "📷 صورة مرفقة").slice(0, 38);
     }
-
     conversation.updatedAt = Date.now();
     saveData();
     renderAll();
 
-   const imageToSend = selectedImage;
     promptEl.value = "";
-   selectedImage = null;
-   imageInput.value = "";
+    selectedImage = null;
+    imageInput.value = "";
+    imageStatus.textContent = "";
 
     try {
-  const reply = await getAssistantReply(
-  text,
-  conversation.messages.slice(0, -1),
-  imageToSend
-);
-
-            conversation.messages.push({
-        role: "assistant",
-        content: reply
-      });
-
+      const reply = await getAssistantReply(
+        cleanText,
+        conversation.messages.slice(0, -1),
+        imageToSend
+      );
+      conversation.messages.push({ role: "assistant", content: reply });
       conversation.updatedAt = Date.now();
-
-      speakReply(reply);
-
       saveData();
+      speakReply(reply);
     } catch (error) {
       conversation.messages.push({
         role: "assistant",
-       content: "خطأ: " + error.message
+        content: "خطأ: " + (error.message || "حدث خطأ غير معروف.")
       });
-      
       saveData();
     } finally {
       busy = false;
@@ -656,32 +345,33 @@ async function getAssistantReply(message, history, image = null) {
     event.preventDefault();
     sendMessage(promptEl.value);
   });
-imageBtn.addEventListener("click", () => {
-  imageInput.click();
-});
-   imageInput.addEventListener("change", () => {
-  const file = imageInput.files?.[0];
 
-  if (!file) return;
+  imageBtn.addEventListener("click", () => imageInput.click());
 
-  if (!file.type.startsWith("image/")) {
-    alert("الرجاء اختيار صورة.");
-    return;
-  }
+  imageInput.addEventListener("change", async () => {
+    const file = imageInput.files && imageInput.files[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      alert("الرجاء اختيار صورة.");
+      imageInput.value = "";
+      return;
+    }
+    if (file.size > 12 * 1024 * 1024) {
+      alert("حجم الصورة كبير جداً. اختر صورة أصغر من 12 ميغابايت.");
+      imageInput.value = "";
+      return;
+    }
+    imageStatus.textContent = "جارٍ تجهيز الصورة...";
+    try {
+      selectedImage = await resizeImage(file);
+      imageStatus.textContent = "تم اختيار الصورة. اكتب سؤالك أو اضغط إرسال.";
+    } catch (error) {
+      selectedImage = null;
+      imageStatus.textContent = "";
+      alert(error.message);
+    }
+  });
 
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    selectedImage = reader.result;
-    alert("تم اختيار الصورة بنجاح. اكتب سؤالك ثم اضغط إرسال.");
-  };
-
-  reader.onerror = () => {
-    alert("تعذر قراءة الصورة.");
-  };
-
-  reader.readAsDataURL(file);
-});   
   promptEl.addEventListener("keydown", event => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
@@ -689,61 +379,40 @@ imageBtn.addEventListener("click", () => {
     }
   });
 
-  document.getElementById("newChat")
-    .addEventListener("click", createConversation);
+  document.getElementById("newChat").addEventListener("click", createConversation);
+  document.getElementById("menuBtn").addEventListener("click", () => {
+    sidebar.classList.toggle("open");
+  });
 
-  document.getElementById("menuBtn")
-    .addEventListener("click", () => {
-      sidebar.classList.toggle("open");
-    });
-
-  document.getElementById("memoryBtn")
-  .addEventListener("click", () => {
-    const value = prompt(
-      "اكتب المعلومات التي تريد أن يتذكرها NEDAL AI:",
-      userMemory
-    );
-
+  document.getElementById("memoryBtn").addEventListener("click", () => {
+    const value = prompt("اكتب المعلومات التي تريد أن يتذكرها NEDAL AI:", userMemory);
     if (value === null) return;
-
     try {
       saveMemory(value);
       alert("تم حفظ الذاكرة بنجاح.");
-    } catch (error) {
-      alert("تعذر حفظ الذاكرة.");
-    }
+    } catch (error) { alert("تعذر حفظ الذاكرة."); }
   });
-  let voiceMode = false;
-  let recognition = null;
-  let speaking = false;
 
   function startListening() {
-    const SpeechRecognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
-
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert("المتصفح لا يدعم التعرف على الصوت. جرّب Chrome.");
       voiceMode = false;
+      voiceBtn.textContent = "🎙️";
       return;
     }
-
     recognition = new SpeechRecognition();
     recognition.lang = "ar-SA";
     recognition.continuous = false;
-   recognition.interimResults = true;
-
-  recognition.onresult = event => {
-  let spokenText = "";
-
-  for (let i = 0; i < event.results.length; i++) {
-    spokenText += event.results[i][0].transcript;
-  }
-
-  promptEl.value = spokenText;
-  promptEl.focus();
-};
-
+    recognition.interimResults = true;
+    recognition.onresult = event => {
+      let spokenText = "";
+      for (let i = 0; i < event.results.length; i++) {
+        spokenText += event.results[i][0].transcript;
+      }
+      promptEl.value = spokenText;
+      promptEl.focus();
+    };
     recognition.onerror = () => {
       if (voiceMode) {
         voiceMode = false;
@@ -751,83 +420,70 @@ imageBtn.addEventListener("click", () => {
         alert("تعذر تشغيل الميكروفون. تحقق من إذن الصوت.");
       }
     };
-
-    recognition.start();
+    recognition.onend = () => {
+      if (voiceMode && !speaking) {
+        voiceMode = false;
+        voiceBtn.textContent = "🎙️";
+      }
+    };
+    try { recognition.start(); }
+    catch (error) {
+      voiceMode = false;
+      voiceBtn.textContent = "🎙️";
+      alert("تعذر بدء الميكروفون.");
+    }
   }
 
-function speakReply(text) {
-  if (!voiceMode) return;
-
-  speechSynthesis.cancel();
-
-  const voices = speechSynthesis.getVoices();
-
-  const arabicVoice =
-    voices.find(v => v.lang === "ar-SY" && v.name.includes("أماني")) ||
-    voices.find(v => v.lang === "ar-SY") ||
-    voices.find(v => v.lang.startsWith("ar"));
-
-  const speech = new SpeechSynthesisUtterance(text);
-  speech.lang = "ar-SY";
-  speech.rate = 1;
-  speech.pitch = 1;
-
-  if (arabicVoice) {
-    speech.voice = arabicVoice;
+  function speakReply(text) {
+    if (!voiceMode || !("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    const voices = speechSynthesis.getVoices();
+    const arabicVoice = voices.find(v => v.lang === "ar-SY" && v.name.includes("أماني")) ||
+      voices.find(v => v.lang === "ar-SY") ||
+      voices.find(v => v.lang.startsWith("ar"));
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "ar-SY";
+    speech.rate = 1;
+    speech.pitch = 1;
+    if (arabicVoice) speech.voice = arabicVoice;
+    speaking = true;
+    speech.onend = () => {
+      speaking = false;
+      if (voiceMode) startListening();
+    };
+    speech.onerror = () => { speaking = false; };
+    speechSynthesis.speak(speech);
   }
 
-  speaking = true;
-
-  speech.onend = () => {
-    speaking = false;
-    if (voiceMode) startListening();
-  };
-
-  speech.onerror = () => {
-    speaking = false;
-  };
-
-  speechSynthesis.speak(speech);
-}
-
- 
   voiceBtn.addEventListener("click", () => {
     voiceMode = !voiceMode;
-
     if (voiceMode) {
       voiceBtn.textContent = "⏹️";
       startListening();
     } else {
       if (recognition) recognition.stop();
-      speechSynthesis.cancel();
+      if ("speechSynthesis" in window) speechSynthesis.cancel();
       speaking = false;
       voiceBtn.textContent = "🎙️";
     }
   });
-loadMemory();
-loadData();
 
-try {
-  const savedSession = sessionStorage.getItem(SESSION_KEY);
+  loadMemory();
+  loadData();
+  try {
+    const savedSession = sessionStorage.getItem(SESSION_KEY);
+    if (savedSession && conversations.some(c => c.id === savedSession)) currentId = savedSession;
+  } catch (error) { currentId = null; }
 
-  if (savedSession && conversations.some(c => c.id === savedSession)) {
-    currentId = savedSession;
+  if (!currentId) {
+    if (conversations.length === 0) createConversation();
+    else {
+      currentId = conversations[0].id;
+      renderAll();
+    }
   } else {
-    currentId = null;
+    renderAll();
   }
-} catch (error) {
-  currentId = null;
-}
-
-if (!currentId) {
-  createConversation();
-} else {
-  renderAll();
-}
-
-window.addEventListener("pagehide", () => {
-  sessionStorage.removeItem(SESSION_KEY);
-});
 })();
 </script>
 </body>
