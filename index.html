@@ -198,11 +198,22 @@
         label.textContent = "NEDAL AI";
         bubble.append(label);
       }
-      const content = document.createElement("div");
-      content.textContent = String(message.content || "");
-      bubble.append(content);
-      messagesEl.append(bubble);
-    });
+    if (message.image) {
+  const image = document.createElement("img");
+  image.src = message.image;
+  image.alt = "الصورة المرسلة";
+  image.style.maxWidth = "100%";
+  image.style.maxHeight = "300px";
+  image.style.borderRadius = "12px";
+  image.style.display = "block";
+  image.style.marginBottom = "10px";
+  bubble.append(image);
+}
+
+const content = document.createElement("div");
+content.textContent = String(message.content || "");
+bubble.append(content);
+messagesEl.append(bubble);
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
@@ -303,8 +314,11 @@
     const messageForHistory = cleanText || "📷 صورة مرفقة";
     busy = true;
     sendBtn.disabled = true;
-
-    conversation.messages.push({ role: "user", content: messageForHistory });
+conversation.messages.push({
+  role: "user",
+  content: messageForHistory,
+  image: imageToSend
+});
     if (conversation.title === "محادثة جديدة") {
       conversation.title = (cleanText || "📷 صورة مرفقة").slice(0, 38);
     }
