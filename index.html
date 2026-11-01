@@ -214,6 +214,8 @@ const content = document.createElement("div");
 content.textContent = String(message.content || "");
 bubble.append(content);
 messagesEl.append(bubble);
+    });
+
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
@@ -487,7 +489,6 @@ conversation.messages.push({
 
 currentId = null;
 createConversation();
-  }
 })();
 </script>
 </body>
