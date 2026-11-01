@@ -484,19 +484,9 @@ conversation.messages.push({
 
   loadMemory();
   loadData();
-  try {
-    const savedSession = sessionStorage.getItem(SESSION_KEY);
-    if (savedSession && conversations.some(c => c.id === savedSession)) currentId = savedSession;
-  } catch (error) { currentId = null; }
 
-  if (!currentId) {
-    if (conversations.length === 0) createConversation();
-    else {
-      currentId = conversations[0].id;
-      renderAll();
-    }
-  } else {
-    renderAll();
+currentId = null;
+createConversation();
   }
 })();
 </script>
